@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --primary-green: #3DAC78;
+    --primary-bg: #121314;
+    --secondary-bg: #222324;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+body {
+    font-family: Poppins, Helvetica, serif;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--primary-bg);
+    color: var(--secondary-bg);
+}
+
+.vault, .midnight {
+    border: thin solid var(--primary-green);
+    background-color: var(--primary-green);
+    display: inline-block;
+    padding: 0.4em;
+    width: 6em;
+    font-weight: bold;
+    border-radius: 0.5em;
+    text-align: center;
+}
+
+.vault:hover, .midnight:hover {
+    border: thin solid white;
+}
+
+.module-selector {
+    background-color: var(--secondary-bg);
+}
