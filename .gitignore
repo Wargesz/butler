@@ -5,6 +5,7 @@ build/
 dist/
 wheels/
 *.egg-info
+butler.db
 
 # Virtual environments
 .venv
