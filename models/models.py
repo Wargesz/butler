@@ -1,9 +1,7 @@
-from sqlalchemy import Column, Integer, Text, Date, ForeignKey
-from sqlalchemy.orm import relationship
-from app.controllers.db import Base
+from flask_login import UserMixin
+from app import app
 
-
-class User(Base):
+class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     username = Column(Text, unique=True)

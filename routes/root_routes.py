@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, redirect
-from app.models.models import User
-from app.controllers.db import get_engine
+from models.models import User
 from sqlalchemy import select, insert
 from random import choice
 import bcrypt
