@@ -1,10 +1,12 @@
 from flask import Blueprint, render_template, request, redirect
-from models.models import User
-from sqlalchemy import select, insert
 from random import choice
+from sqlalchemy import select
+from controllers.db import DB
+from models.models import User
 import bcrypt
 
-root_bp = Blueprint('root', __name__, template_folder='../templates/')
+
+root_bp = Blueprint('root', __name__, template_folder='templates/')
 
 
 @root_bp.route('/')
@@ -28,13 +30,12 @@ def post_login():
     if password == "":
         return render_template('login.html', error_message='no password \
                 provided')
-    conn = get_engine().connect()
-    stmt = select(User).where(User.username == username)
-    user = conn.execute(stmt).fetchone()
-    conn.close()
+    user = DB.execute(select(User.username, User.password).filter(
+        User.username == username)).one()
     if user is None:
         return render_template('login.html', error_message='invalid username')
-    if bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+    if bcrypt.checkpw(password.encode('utf-8'),
+                      user.password.encode('utf-8')):
         return redirect('/')
     else:
         return render_template('login.html', error_message='invalid password')
@@ -57,22 +58,12 @@ def post_register():
         return render_template('register.html', error_message='no password \
                 provided')
 
-    stmt = select(User.id).where(User.username == username)
-    conn = get_engine().connect()
-    res = conn.execute(stmt).fetchone()
-    if res is not None:
+    user = DB.execute(DB.query(User).filter(User.username == username)).first()
+    if user is not None:
         return render_template('register.html', error_message='username taken')
-
-    hashed_password = hash_password(password)
-    api_key = generate_api_key(conn.execute(
-        select(User.api_key)
-        ).fetchall())
-    stmt = insert(User).values(username=username,
-                               password=hashed_password,
-                               api_key=api_key)
-    conn.execute(stmt)
-    conn.commit()
-    conn.close()
+    keys = DB.execute(select(User.api_key)).all()
+    DB.add(User(username, hash_password(password), generate_api_key(keys)))
+    DB.commit()
     return redirect('/')
 
 
@@ -82,6 +73,7 @@ def generate_api_key(keys):
     for _ in range(64):
         key += choice(c)
     while key in keys:
+        print('generated existing key')
         key = ''
         for _ in range(64):
             key += choice(c)
