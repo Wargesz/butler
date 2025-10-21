@@ -30,8 +30,7 @@ def post_login():
     if password == "":
         return render_template('login.html', error_message='no password \
                 provided')
-    user = DB.execute(select(User.username, User.password).filter(
-        User.username == username)).one()
+    user = User.query.filter(username == username).first()
     if user is None:
         return render_template('login.html', error_message='invalid username')
     if bcrypt.checkpw(password.encode('utf-8'),
@@ -57,11 +56,10 @@ def post_register():
     if password == "":
         return render_template('register.html', error_message='no password \
                 provided')
-
-    user = DB.execute(DB.query(User).filter(User.username == username)).first()
+    user = User.query.filter(User.username == username).first()
     if user is not None:
         return render_template('register.html', error_message='username taken')
-    keys = DB.execute(select(User.api_key)).all()
+    keys = User.query.with_entities(User.api_key).all()
     DB.add(User(username, hash_password(password), generate_api_key(keys)))
     DB.commit()
     return redirect('/')
