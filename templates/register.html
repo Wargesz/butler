@@ -2,18 +2,28 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>butler register</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <title>butler. - Sign up</title>
     </head>
     <body>
-        <form method="POST">
-            <input name="username" placeholder="Username">
-            <input name="password" type="password" placeholder="Password">
-            <input type="submit" value="Register">
-        </form>
-        {% if error_message %}
-        <div>
-            {{ error_message }}
+        <div class="login-container">
+            <div id="title">
+                butler.
+            </div>
+            <form method="post" action="">
+                <input type="text" id="username" name="username" placeholder="Username">
+                <input type="password" id="password" name="password" placeholder="Password">
+                <input type="submit" value="Register" id="submit">
+                <div id="signup-redirect">
+                    or <a href="/login">log in</a>.
+                </div>
+            </form>
+            {% if error_message %}
+            <div id="error-message">
+                {{ error_message }}
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
     </body>
 </html>
