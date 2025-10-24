@@ -1,4 +1,3 @@
-from flask_login import UserMixin
 from sqlalchemy import Column, Integer, Text, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from controllers.db import DB, Base
@@ -16,7 +15,7 @@ class CRUDMixin:
         return self
 
 
-class User(Base, CRUDMixin, UserMixin):
+class User(Base, CRUDMixin):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     username = Column(Text, unique=True, nullable=False)
