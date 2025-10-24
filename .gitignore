@@ -13,3 +13,4 @@ butler.sqlite
 # Custom
 
 *.swp
+.env
