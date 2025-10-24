@@ -3,9 +3,13 @@ from routes.root_routes import root_bp
 from routes.vault_routes import vault_bp
 from routes.midnight_routes import midnight_bp
 from controllers.db import setup_db, DB
-from models.models import User
+from dotenv import dotenv_values
+
+env = dotenv_values('.env')
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = env['SECRET']
+
 app.register_blueprint(root_bp, prefix='/')
 app.register_blueprint(vault_bp, prefix='/vault')
 app.register_blueprint(midnight_bp, prefix='/midnight')
