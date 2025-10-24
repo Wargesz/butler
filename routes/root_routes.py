@@ -1,16 +1,23 @@
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, session
+from dotenv import dotenv_values
 from random import choice
-from sqlalchemy import select
 from controllers.db import DB
 from models.models import User
+from middleware.auth import auth
+from datetime import datetime, timezone, timedelta
 import bcrypt
+import jwt
+
+env = dotenv_values('.env')
 
 
 root_bp = Blueprint('root', __name__, template_folder='templates/')
 
 
 @root_bp.route('/')
+@auth
 def root():
+    print(f'authed: {session.get('user')}')
     return render_template('index.html')
 
 
@@ -35,7 +42,10 @@ def post_login():
         return render_template('login.html', error_message='invalid username')
     if bcrypt.checkpw(password.encode('utf-8'),
                       user.password.encode('utf-8')):
-        return redirect('/')
+
+        res = redirect('/')
+        res.set_cookie('Authorize', signCookie(user))
+        return res
     else:
         return render_template('login.html', error_message='invalid password')
 
@@ -62,7 +72,9 @@ def post_register():
     keys = User.query.with_entities(User.api_key).all()
     DB.add(User(username, hash_password(password), generate_api_key(keys)))
     DB.commit()
-    return redirect('/')
+    res = redirect('/')
+    res.set_cookie('Authorize', signCookie(user))
+    return res
 
 
 def generate_api_key(keys):
@@ -82,3 +94,9 @@ def hash_password(plain_password):
     b = plain_password.encode('utf-8')
     hash = bcrypt.hashpw(b, bcrypt.gensalt())
     return hash.decode('utf-8')
+
+
+def signCookie(user):
+    token = jwt.encode({"sub": str(user.id), "exp": datetime.now(tz=timezone.utc) +
+                        timedelta(days=3)}, env['SECRET'], algorithm="HS256")
+    return token
