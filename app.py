@@ -10,9 +10,9 @@ env = dotenv_values('.env')
 app = Flask(__name__)
 app.config['SECRET_KEY'] = env['SECRET']
 
-app.register_blueprint(root_bp, prefix='/')
-app.register_blueprint(vault_bp, prefix='/vault')
-app.register_blueprint(midnight_bp, prefix='/midnight')
+app.register_blueprint(root_bp, url_prefix='/')
+app.register_blueprint(vault_bp, url_prefix='/vault')
+app.register_blueprint(midnight_bp, url_prefix='/midnight')
 
 
 @app.teardown_appcontext
