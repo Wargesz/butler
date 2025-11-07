@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, session
 from dotenv import dotenv_values
 from random import choice
 from controllers.db import DB
+from controllers.content import createContentDir
 from models.models import User
 from middleware.auth import auth
 from datetime import datetime, timezone, timedelta
@@ -42,7 +43,6 @@ def post_login():
         return render_template('login.html', error_message='invalid username')
     if bcrypt.checkpw(password.encode('utf-8'),
                       user.password.encode('utf-8')):
-
         res = redirect('/')
         res.set_cookie('Authorize', signCookie(user))
         return res
@@ -70,8 +70,10 @@ def post_register():
     if user is not None:
         return render_template('register.html', error_message='username taken')
     keys = User.query.with_entities(User.api_key).all()
-    DB.add(User(username, hash_password(password), generate_api_key(keys)))
+    user = User(username, hash_password(password), generate_api_key(keys))
+    DB.add(user)
     DB.commit()
+    createContentDir(user)
     res = redirect('/')
     res.set_cookie('Authorize', signCookie(user))
     return res
@@ -97,6 +99,6 @@ def hash_password(plain_password):
 
 
 def signCookie(user):
-    token = jwt.encode({"sub": str(user.id), "exp": datetime.now(tz=timezone.utc) +
-                        timedelta(days=3)}, env['SECRET'], algorithm="HS256")
+    token = jwt.encode({"sub": str(user.id), "exp": datetime.now(
+        tz=timezone.utc) + timedelta(days=3)}, env['SECRET'], algorithm="HS256")
     return token
