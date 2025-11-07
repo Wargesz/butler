@@ -14,3 +14,8 @@ butler.sqlite
 
 *.swp
 .env
+
+# Content structure without user files
+
+content/public/*
+content/private/*
