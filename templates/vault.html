@@ -6,11 +6,53 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='vault.css') }}" />
     </head>
     <body>
-        <fieldset class="vault">
-            <legend>Public</legend>
-        </fieldset>
-        <fieldset class="vault">
-            <legend>Private</legend>
-        </fieldset>
+        <aside>
+            <fieldset class="vault public">
+                <legend>Public</legend>
+                {% if public.keys()|length %}
+                    {% for key in public.keys() %}
+                        {% if key|nested %}
+                            <div class="nested-pocket pocket-container">
+                            /{{ key|trailing }}
+                            <ul>
+                            {% for item in public[key] %}
+                                <li class="nested-pocket pocket
+                                    path-{{key}}/{{item}}">{{item|trailing}}</li>
+                            {% endfor %}
+                            </ul>
+                            </div>
+                        {% else %}
+                            {{key|trailing|getusername}}:
+                            <ul>
+                            {% for item in public[key] %}
+                                <li class="pocket
+                                    path-{{key}}/{{item}}">{{item|trailing}}</li>
+                            </ul>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    No items.
+                {% endif %}
+            </fieldset>
+            <fieldset class="vault private">
+                <legend>Private</legend>
+                {% if private.keys()|length %}
+                {% for key in private.keys() %}
+                {{key}}:
+                {% for item in private[key] %}
+                <ul class="pocket path-{{key}}/{{item}}">{{item|trailing}}</ul>
+                {% endfor %}
+                {% endfor %}
+                {% else %}
+                No items.
+                {% endif %}
+            </fieldset>
+        </aside>
+        <main>
+            <span id="viewer">
+            </span>
+        </main>
     </body>
+    <script src="{{ url_for('static', filename='vault.js') }}"></script>
 </html>
