@@ -20,4 +20,5 @@ def auth(f):
         except ExpiredSignatureError:
             return redirect('/login')
         return f()
+    wrap.__name__ = f.__name__
     return wrap
