@@ -15,6 +15,23 @@ app.register_blueprint(vault_bp, url_prefix='/vault')
 app.register_blueprint(midnight_bp, url_prefix='/midnight')
 
 
+def trailing(s):
+    return s.split('/')[-1]
+
+
+def nested(s):
+    return len(s.split('/')) > 1
+
+
+def getusername(s):
+    return s.split('user-')[1]
+
+
+app.jinja_env.filters['trailing'] = trailing
+app.jinja_env.filters['nested'] = nested
+app.jinja_env.filters['getusername'] = getusername
+
+
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     DB.remove()
