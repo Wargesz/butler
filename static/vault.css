@@ -10,9 +10,57 @@
     color: var(--primary-green);
     background-color: var(--primary-bg);
     font-family: Poppins, serif;
+    padding: 0;
+    margin: 0;
 }
 
 .vault {
     border: thin solid var(--primary-green);
     border-radius: 0.5em;
+    background-color: var(--secondary-bg);
+    padding: 1em;
+    width: 15em;
+    height: 40vh;
+}
+
+.vault legend {
+    background-color: var(--primary-green);
+    color: white;
+    font-weight: bold;
+    padding: 0.3em;
+    border-radius: 0.5em;
+    width: 50%;
+    text-align: center;
+}
+
+aside {
+    display: inline;
+}
+
+.pocket-container, .pocket {
+    background-color: var(--secondary-bg);
+}
+
+.pocket:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+ul {
+    margin-left: 1em;
+}
+
+ul:has(.nested-pocket) {
+    margin-left: 2em;
+}
+
+div.nested-pocket {
+    margin-left: 2em;
+}
+
+#viewer {
+    display: none;
+    border: thin solid var(--primary-green);
+    margin: 2em;
+    padding: 1.5em;
 }
