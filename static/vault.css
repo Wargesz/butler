@@ -14,6 +14,11 @@
     margin: 0;
 }
 
+body {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
 .vault {
     border: thin solid var(--primary-green);
     border-radius: 0.5em;
@@ -31,10 +36,6 @@
     border-radius: 0.5em;
     width: 50%;
     text-align: center;
-}
-
-aside {
-    display: inline;
 }
 
 .pocket-container, .pocket {
