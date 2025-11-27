@@ -1,15 +1,23 @@
 registerClickEvents();
 indentNestedFolders();
 
+document.querySelector('#viewer #toolbar button').addEventListener('click', () => {
+    document.querySelector('#viewer').style.display = 'none';
+});
+
 function registerClickEvents() {
 	for (const e of document.querySelectorAll('.file')) {
 		e.addEventListener('click', async () => {
 			path = getPathOfElement(e);
-			const r = await fetch(`file?path=${path}/${e.innerText}`);
+			const r = await fetch('file?' + new URLSearchParams({
+                'path': `${path}/${e.innerText}`,
+                'scope': e.classList.contains('private') ? 'private' : 'public',
+            }));
 			const text = await r.text();
 			const element = document.querySelector('#viewer');
-			element.innerText = text;
 			element.style.display = 'block';
+			document.querySelector('.opened-file').innerText = e.innerText;
+            document.querySelector('#viewer-contents').innerText = text;
 		});
 	}
 }
