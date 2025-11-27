@@ -1,6 +1,19 @@
 from os import makedirs, walk
+from models.models import User
 
 PREFIXES = ['./content/public/', './content/private/']
+
+
+class UserContent():
+    def __init__(self, username):
+        self.username = username
+        self.content = []
+
+    def __repr__(self):
+        return f'{self.username}: {self.content}'
+
+    def empty(self):
+        return not len(self.content)
 
 
 def createContentDir(user):
@@ -9,21 +22,35 @@ def createContentDir(user):
 
 
 def buildVaults(username):
-    public = dict()
-    private = dict()
-    for (root, dirs, files) in walk('./content/public/'):
-        root = root.replace('./content/public/', '')
-        if root == '':
+    userContents = []
+    for user in getUsers():
+        vault = buildPublicVaultForUser(user)
+        if vault.empty():
             continue
-        public[root] = files
-    for (root, dirs, files) in walk(f'./content/public/{username}'):
-        root = root.replace(f'./content/public/{username}', '')
-        if root == '':
+        userContents.append(vault)
+    privateContent = UserContent(username)
+    return [userContents, privateContent]
+
+
+def buildPublicVaultForUser(username):
+    userContent = UserContent(username)
+    for (root, dirs, files) in walk(f'./content/public/user-{username}'):
+        root = root.replace(f'./content/public/user-{username}', '')
+        if len(dirs) == 0 and len(files) == 0:
             continue
-        private[root] = files
-    return [public, private]
+        userContent.content.append((root, files))
+    return userContent
+
+
+def buildPrivateVaultForAuthedUser(username):
+    privateContent = UserContent(username)
+    for (root, dirs, files) in walk(f'./content/private/user-{username}'):
+        root = root.replace(f'./content/private/user-{username}', '')
+        if len(dirs) == 0 and len(files) == 0:
+            continue
+        privateContent.content.append((root, files))
+    return privateContent
 
 
 def getUsers():
-    for (_, dirs, _) in walk('./content/public/'):
-        return dirs
+    return [x[0] for x in User.query.with_entities(User.username).all()]
