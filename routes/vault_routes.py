@@ -19,6 +19,9 @@ def getFile():
     if file is None:
         return ''
     content = ""
-    with open(f'./content/public/{file}') as f:
-        content = f.read()
+    try:
+        with open(f'./content/public/{file}') as f:
+            content = f.read()
+    except FileNotFoundError:
+        return "no file"
     return content
