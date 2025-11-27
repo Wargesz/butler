@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, session
+from flask import (
+        Blueprint, render_template, request, redirect, session,
+        send_from_directory)
 from dotenv import dotenv_values
 from random import choice
 from controllers.db import DB
@@ -13,6 +15,12 @@ env = dotenv_values('.env')
 
 
 root_bp = Blueprint('root', __name__, template_folder='templates/')
+
+
+@root_bp.route('/favicon.ico')
+def favicon():
+    return send_from_directory('.', 'static/favicon.ico',
+                               mimetype='image/vnd.microsoft.icon')
 
 
 @root_bp.route('/')
