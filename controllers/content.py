@@ -28,7 +28,7 @@ def buildVaults(username):
         if vault.empty():
             continue
         userContents.append(vault)
-    privateContent = UserContent(username)
+    privateContent = buildPrivateVaultForAuthedUser(username)
     return [userContents, privateContent]
 
 
