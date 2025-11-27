@@ -17,11 +17,24 @@ def vault():
 def getFile():
     file = request.args.get('path')
     if file is None:
-        return ''
-    content = ""
+        return 'missing path param'
+    scope = request.args.get('scope')
+    if scope is None:
+        return 'missing score param'
+    content = loadFileFromScope(scope, file)
+    return content
+
+
+def loadFileFromScope(scope, file):
+    # file = user-bob/asd
+    if scope == 'private':
+        username = session.get('user')
+        if username not in file.split('/')[0]:
+            return 'no file'
+    content = ''
     try:
-        with open(f'./content/public/{file}') as f:
+        with open(f'./content/{scope}/{file}') as f:
             content = f.read()
     except FileNotFoundError:
-        return "no file"
+        return 'no file'
     return content
