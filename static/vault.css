@@ -8,7 +8,6 @@
 
 * {
     color: var(--primary-green);
-    background-color: var(--primary-bg);
     font-family: Poppins, serif;
     padding: 0;
     margin: 0;
@@ -16,6 +15,7 @@
 
 body {
     display: grid;
+    background-color: var(--primary-bg);
     grid-template-columns: auto auto auto;
 }
 
@@ -38,25 +38,30 @@ body {
     text-align: center;
 }
 
-.pocket-container, .pocket {
-    background-color: var(--secondary-bg);
+.user {
+    border-radius: 0.4em;
+    display: block;
+    padding: 0.2em;
+    background-color: var(--primary-bg);
 }
 
-.pocket:hover {
-    cursor: pointer;
+.user img {
+    width: 1.2em;
+    border-radius: 0.5em;
+    border: thin solid var(--primar-green);
+}
+
+.file:hover {
     font-weight: bold;
+    cursor: pointer;
 }
 
-ul {
+.folder, .file {
     margin-left: 1em;
 }
 
-ul:has(.nested-pocket) {
-    margin-left: 2em;
-}
-
-div.nested-pocket {
-    margin-left: 2em;
+.folder.nested > .folder-name::before {
+    content: '/';
 }
 
 #viewer {
