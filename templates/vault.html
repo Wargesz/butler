@@ -9,43 +9,50 @@
         <aside>
             <fieldset class="vault public">
                 <legend>Public</legend>
-                {% if public.keys()|length %}
-                    {% for key in public.keys() %}
-                        {% if key|nested %}
-                            <div class="nested-pocket pocket-container">
-                            /{{ key|trailing }}
-                            <ul>
-                            {% for item in public[key] %}
-                                <li class="nested-pocket pocket
-                                    path-{{key}}/{{item}}">{{item|trailing}}</li>
-                            {% endfor %}
-                            </ul>
-                            </div>
-                        {% else %}
-                            {{key|trailing|getusername}}:
-                            <ul>
-                            {% for item in public[key] %}
-                                <li class="pocket
-                                    path-{{key}}/{{item}}">{{item|trailing}}</li>
-                            </ul>
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
+                {% if public|length %}
+                {% for entry in public %}
+                <div class="user">
+                    <img src="{{url_for('static', filename='user.png')}}">{{
+                    entry.username }}
+                </div>
+                {% for content in entry.content %}
+                <div class="folder {% if content[0]|nested %} nested nested-{{content[0]|nested}} {% endif%}">
+                    <div class="folder-name">
+                        {{ content[0]|trailing }}
+                    </div>
+                    <div class="files">
+                        {% for file in content[1] %}
+                        <li class="file path-user-{{entry.username}}{{content[0]}}">{{ file }}</li>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+                {% endfor %}
                 {% else %}
-                    No items.
+                No files.
                 {% endif %}
             </fieldset>
             <fieldset class="vault private">
                 <legend>Private</legend>
-                {% if private.keys()|length %}
-                {% for key in private.keys() %}
-                {{key}}:
-                {% for item in private[key] %}
-                <ul class="pocket path-{{key}}/{{item}}">{{item|trailing}}</ul>
-                {% endfor %}
+                {% if private.content|length %}
+                <div class="user">
+                    <img src="{{url_for('static', filename='user.png')}}">{{
+                    private.username }}
+                </div>
+                {% for content in private.content %}
+                <div class="folder nested-{{ content[0]|nested }}">
+                    /{{ content[0]|trailing }}
+                    <div class="files">
+                        {% for file in content[1] %}
+                        <div class="file">
+                            {{ file }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
                 {% endfor %}
                 {% else %}
-                No items.
+                No files.
                 {% endif %}
             </fieldset>
         </aside>
