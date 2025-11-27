@@ -20,16 +20,11 @@ def trailing(s):
 
 
 def nested(s):
-    return len(s.split('/')) > 1
-
-
-def getusername(s):
-    return s.split('user-')[1]
+    return s.count('/')
 
 
 app.jinja_env.filters['trailing'] = trailing
 app.jinja_env.filters['nested'] = nested
-app.jinja_env.filters['getusername'] = getusername
 
 
 @app.teardown_appcontext
