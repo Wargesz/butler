@@ -19,22 +19,73 @@ body {
     grid-template-columns: auto auto auto;
 }
 
-.vault {
+aside {
+    position: absolute;
+    top: 50%;
     border: thin solid var(--primary-green);
     border-radius: 0.5em;
     background-color: var(--secondary-bg);
     padding: 1em;
     width: 15em;
-    height: 40vh;
+    margin: 0;
+    vertical-align: baseline;
+    transform: translateY(-50%);
 }
 
-.vault legend {
+h1 {
+    text-align: center;
+}
+
+.btn {
+    background-color: var(--primary-green);
+    color: white;
+    border: thin solid var(--primary-green);
+    border-radius: 0.5em;
+    padding: 0.2em;
+}
+
+.btn:hover {
+    cursor: pointer;
+    border: thin solid white;
+}
+
+.vault > summary {
     background-color: var(--primary-green);
     color: white;
     font-weight: bold;
     padding: 0.3em;
     border-radius: 0.5em;
-    width: 50%;
+    width: auto;
+    text-align: center;
+    align-items: center;
+}
+
+summary:hover {
+    cursor: pointer;
+}
+
+.user > summary {
+    justify-content: center;
+    width: 80%;
+}
+
+details > summary::-webkit-details-marker {
+    display: none;
+}
+
+.user > summary {
+    list-style: none;
+}
+
+.user {
+    margin: 1em 0;
+}
+
+.vault.public {
+    margin-bottom: 1em;
+}
+
+.empty-vault {
     text-align: center;
 }
 
@@ -46,7 +97,7 @@ body {
 }
 
 .user img {
-    width: 1.2em;
+    width: 1.5em;
     border-radius: 0.5em;
     border: thin solid var(--primar-green);
 }
@@ -64,9 +115,27 @@ body {
     content: '/';
 }
 
+main {
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%);
+    transform: translateY(-50%);
+    left: 50%;
+}
+
 #viewer {
     display: none;
-    border: thin solid var(--primary-green);
+}
+
+#viewer-contents {
     margin: 2em;
     padding: 1.5em;
+    width: 100%;
+}
+
+#toolbar, #toolbar span {
+    background-color: var(--primary-green);
+    color: white;
+    padding: 0.4em;
+    border-radius: 0.5em;
 }
