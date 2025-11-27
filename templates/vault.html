@@ -7,58 +7,73 @@
     </head>
     <body>
         <aside>
-            <fieldset class="vault public">
-                <legend>Public</legend>
+            <h1>Vaults</h1>
+            <details class="vault public" open>
+                <summary>Public</summary>
                 {% if public|length %}
                 {% for entry in public %}
-                <div class="user">
-                    <img src="{{url_for('static', filename='user.png')}}">{{
-                    entry.username }}
-                </div>
-                {% for content in entry.content %}
-                <div class="folder {% if content[0]|nested %} nested nested-{{content[0]|nested}} {% endif%}">
-                    <div class="folder-name">
-                        {{ content[0]|trailing }}
-                    </div>
-                    <div class="files">
-                        {% for file in content[1] %}
-                        <li class="file path-user-{{entry.username}}{{content[0]}}">{{ file }}</li>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endfor %}
-                {% endfor %}
-                {% else %}
-                No files.
-                {% endif %}
-            </fieldset>
-            <fieldset class="vault private">
-                <legend>Private</legend>
-                {% if private.content|length %}
-                <div class="user">
-                    <img src="{{url_for('static', filename='user.png')}}">{{
-                    private.username }}
-                </div>
-                {% for content in private.content %}
-                <div class="folder nested-{{ content[0]|nested }}">
-                    /{{ content[0]|trailing }}
-                    <div class="files">
-                        {% for file in content[1] %}
-                        <div class="file">
-                            {{ file }}
+                <details class="user">
+                    <summary>
+                        <img src="{{url_for('static', filename='user.png')}}">
+                        <span>{{ entry.username }}</span>
+                    </summary>
+                    {% for content in entry.content %}
+                    <div class="folder {% if content[0]|nested %} nested nested-{{content[0]|nested}} {% endif%}">
+                        <div class="folder-name">
+                            {{ content[0]|trailing }}
+                        </div>
+                        <div class="files">
+                            {% for file in content[1] %}
+                            <li class="file path-user-{{entry.username}}{{content[0]}}">{{ file }}</li>
+                            {% endfor %}
                         </div>
                         {% endfor %}
                     </div>
-                </div>
+                </details>
                 {% endfor %}
                 {% else %}
-                No files.
+                <div class="empty-vault">
+                    No files.
+                </div>
                 {% endif %}
-            </fieldset>
+            </details>
+            <details class="vault private" open>
+                <summary>Private</summary>
+                {% if private.content|length %}
+                <details class="user">
+                    <summary>
+                        <img src="{{url_for('static', filename='user.png')}}">
+                        <span>{{private.username }}</span>
+                    </summary>
+                    {% for content in private.content %}
+                    <div class="folder {% if content[0]|nested %} nested nested-{{content[0]|nested}} {% endif%}">
+                        <div class="folder-name">
+                            {{ content[0]|trailing }}
+                        </div>
+                        <div class="files">
+                            {% for file in content[1] %}
+                            <li class="file private path-user-{{private.username}}{{content[0]}}">{{ file }}</li>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </details>
+                {% endfor %}
+                {% else %}
+                <div class="empty-vault">
+                    No files.
+                </div>
+                {% endif %}
+            </details>
         </aside>
         <main>
-            <span id="viewer">
-            </span>
+            <div id="viewer">
+                <div id="toolbar">
+                    <span class="opened-file"></span>
+                    <button class="btn">X</button>
+                </div>
+                <span id="viewer-contents">
+                </span>
+            </div>
         </main>
     </body>
     <script src="{{ url_for('static', filename='vault.js') }}"></script>
