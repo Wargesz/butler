@@ -46,7 +46,7 @@ def post_login():
     if password == "":
         return render_template('login.html', error_message='no password \
                 provided')
-    user = User.query.filter(username == username).first()
+    user = User.query.filter(User.username == username).first()
     if user is None:
         return render_template('login.html', error_message='invalid username')
     if bcrypt.checkpw(password.encode('utf-8'),
