@@ -38,6 +38,7 @@ def buildPublicVaultForUser(username):
         root = root.replace(f'./content/public/user-{username}', '')
         if len(dirs) == 0 and len(files) == 0:
             continue
+        files.sort()
         userContent.content.append((root, files))
     return userContent
 
@@ -48,6 +49,7 @@ def buildPrivateVaultForAuthedUser(username):
         root = root.replace(f'./content/private/user-{username}', '')
         if len(dirs) == 0 and len(files) == 0:
             continue
+        files.sort()
         privateContent.content.append((root, files))
     return privateContent
 
