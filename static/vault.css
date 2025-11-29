@@ -22,6 +22,7 @@ body {
 aside {
     position: absolute;
     top: 50%;
+    transform: translateY(-50%);
     border: thin solid var(--primary-green);
     border-radius: 0.5em;
     background-color: var(--secondary-bg);
@@ -29,7 +30,6 @@ aside {
     width: 15em;
     margin: 0;
     vertical-align: baseline;
-    transform: translateY(-50%);
 }
 
 h1 {
@@ -115,27 +115,37 @@ details > summary::-webkit-details-marker {
     content: '/';
 }
 
-main {
+#viewer {
     position: absolute;
     top: 50%;
-    transform: translateX(-50%);
-    transform: translateY(-50%);
     left: 50%;
-}
-
-#viewer {
+    transform: translate(-50%, -50%);
+    width: 30%;
     display: none;
 }
 
-#viewer-contents {
-    margin: 2em;
-    padding: 1.5em;
-    width: 100%;
+#toolbar button {
+    float: right;
+    margin-bottom: 0.3em;
+    margin-left: 0.3em;
 }
 
-#toolbar, #toolbar span {
-    background-color: var(--primary-green);
+#toolbar {
+    padding-left: 1em;
+    vertical-align: baseline;
+}
+
+#viewer-contents {
+    white-space: pre-wrap;
+    width: 100%;
+    resize: none;
+    background-color: var(--secondary-bg);
     color: white;
-    padding: 0.4em;
+    padding: 0.3em;
     border-radius: 0.5em;
+    border: thin solid var(--primary-green);
+}
+
+.active-file {
+    font-weight: bold;
 }
