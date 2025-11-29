@@ -25,7 +25,7 @@ def getFile():
         return 'missing scope param'
     j['content'] = loadFileFromScope(j['scope'],
                                      j['file'])
-    j['owner'] = getUserFromPath(j['file'])
+    j['owner'] = getUserFromPath(j['file']) == session.get('user')
     j['scope'] = j['scope']
     if request.accept_mimetypes.accept_json:
         return dumps(j)
