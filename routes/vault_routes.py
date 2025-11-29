@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, session, request
 from controllers.content import buildVaults
 from middleware.auth import auth
+from json import dumps
 
 vault_bp = Blueprint('vault', __name__)
 
@@ -15,14 +16,20 @@ def vault():
 @vault_bp.route('/file')
 @auth
 def getFile():
-    file = request.args.get('path')
-    if file is None:
+    j = {}
+    j['file'] = request.args.get('path')
+    if j['file'] is None:
         return 'missing path param'
-    scope = request.args.get('scope')
-    if scope is None:
-        return 'missing score param'
-    content = loadFileFromScope(scope, file)
-    return content
+    j['scope'] = request.args.get('scope')
+    if j['scope'] is None:
+        return 'missing scope param'
+    j['content'] = loadFileFromScope(j['scope'],
+                                     j['file'])
+    j['owner'] = getUserFromPath(j['file'])
+    j['scope'] = j['scope']
+    if request.accept_mimetypes.accept_json:
+        return dumps(j)
+    return j['content']
 
 
 def loadFileFromScope(scope, file):
@@ -38,3 +45,7 @@ def loadFileFromScope(scope, file):
     except FileNotFoundError:
         return 'no file'
     return content
+
+
+def getUserFromPath(path):
+    return path.split('/')[0].split('user-')[1]
