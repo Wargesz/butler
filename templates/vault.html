@@ -69,12 +69,17 @@
             <div id="viewer">
                 <div id="toolbar">
                     <span class="opened-file"></span>
-                    <button class="btn">X</button>
+                    <button class="btn close">Close</button>
+                    <button hidden class="btn edit-content">Edit</button>
                 </div>
-                <span id="viewer-contents">
-                </span>
+                <textarea readonly rows="20" id="viewer-contents"></textarea>
             </div>
         </main>
     </body>
+    <script>
+        const context = {
+            path: '',
+        }
+    </script>
     <script src="{{ url_for('static', filename='vault.js') }}"></script>
 </html>
