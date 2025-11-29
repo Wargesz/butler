@@ -6,6 +6,12 @@ document.querySelector('#viewer #toolbar .close').addEventListener('click', e =>
 	document.querySelector('#viewer').style.display = 'none';
 });
 
+document.querySelector('.edit-content').addEventListener('click', e => {
+    const content = document.querySelector('#viewer-contents');
+    content.readOnly = false;
+    content.focus();
+});
+
 function registerClickEvents() {
 	for (const e of document.querySelectorAll('.file')) {
 		e.addEventListener('click', async () => {
@@ -26,6 +32,8 @@ function registerClickEvents() {
 			context.path = fileInfo.file;
 			const element = document.querySelector('#viewer');
 			element.style.display = 'block';
+			document.querySelector('.edit-content').hidden = !fileInfo.owner;
+            document.querySelector('#viewer-contents').readOnly = true;
 			document.querySelector('.opened-file').innerText = fileInfo.file.split('/').at(-1);
 			if (fileInfo.content == '') {
 				document.querySelector('#viewer-contents').placeholder = 'Empty file';
