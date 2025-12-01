@@ -54,5 +54,21 @@ def buildPrivateVaultForAuthedUser(username):
     return privateContent
 
 
+def getAllPathsOfUser(username):
+    paths = {
+            'private': ['/'],
+            'public': ['/'],
+            }
+    for (root, dirs, _) in walk(f'./content/private/user-{username}'):
+        root = root.replace(f'./content/private/user-{username}', '')
+        for d in dirs:
+            paths['private'].append(f'{root}/{d}')
+    for (root, dirs, _) in walk(f'./content/public/user-{username}'):
+        root = root.replace(f'./content/public/user-{username}', '')
+        for d in dirs:
+            paths['public'].append(f'{root}/{d}')
+    return paths
+
+
 def getUsers():
     return [x[0] for x in User.query.with_entities(User.username).all()]
