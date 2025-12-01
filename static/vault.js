@@ -64,7 +64,7 @@ document.querySelector('#files').addEventListener('change', e => {
 
 document.querySelector('.edit-content').addEventListener('click', e => {
 	const content = document.querySelector('#viewer-contents');
-	document.querySelector('.save-editing').hidden = false;
+    updateView('edit');
 	content.readOnly = false;
 	content.focus();
 });
