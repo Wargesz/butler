@@ -64,21 +64,38 @@
                 </div>
                 {% endif %}
             </details>
+            <button id="upload" class="btn">Upload</button>
         </aside>
         <main>
             <div id="viewer">
                 <div id="toolbar">
                     <span class="opened-file"></span>
-                    <button class="btn close">Close</button>
+                    <button class="btn close close-target-viewer">Close</button>
                     <button hidden class="btn edit-content">Edit</button>
                 </div>
                 <textarea readonly rows="20" id="viewer-contents"></textarea>
             </div>
+            <form id="uploader" method="POST" enctype="multipart/form-data"
+                                              action="upload">
+                <div id="toolbar">
+                    <span>File uploader</span>
+                    <button type="button" class="btn close close-target-uploader">Close</button>
+                    <input type="submit" value="Upload" class="btn">
+                </div>
+                <div id="contents">
+                    <input required multiple type="file" name="files" id="files" value="Select files">
+                    <label for="selected-files">Files:</label>
+                    <pre id="selected-files"></pre>
+                    <label for="upload-path">Target folder:</label>
+                    <select required name="path" id="upload-path"></select>
+                </div>
+            </form>
         </main>
     </body>
     <script>
         const context = {
             path: '',
+            scope: '',
         }
     </script>
     <script src="{{ url_for('static', filename='vault.js') }}"></script>
