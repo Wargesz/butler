@@ -72,6 +72,7 @@
                     <span class="opened-file"></span>
                     <button class="btn close close-target-viewer">Close</button>
                     <button hidden class="btn edit-content">Edit</button>
+                    <button id="save-editing" style="display: none;" class="btn">Save</button>
                 </div>
                 <textarea readonly rows="20" id="viewer-contents"></textarea>
             </div>
@@ -96,6 +97,29 @@
         const context = {
             path: '',
             scope: '',
+            view: 'browse',
+        }
+        const views = {
+            browse: {
+                'viewer': true,
+                'uploader': true,
+                'save-editing': true,
+            },
+            view: {
+                'viewer': false,
+                'uploader': true,
+                'save-editing': true,
+            },
+            edit: {
+                'viewer': false,
+                'uploader': true,
+                'save-editing': false,
+            },
+            upload: {
+                'viewer': true,
+                'uploader': false,
+                'save-editing': true,
+            }
         }
     </script>
     <script src="{{ url_for('static', filename='vault.js') }}"></script>
