@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, session, request
-from controllers.content import buildVaults
+from flask import Blueprint, render_template, session, request, redirect
+from controllers.content import buildVaults, getAllPathsOfUser
 from middleware.auth import auth
 from json import dumps
+from werkzeug.utils import secure_filename
+import os
 
 vault_bp = Blueprint('vault', __name__)
 
@@ -30,6 +32,34 @@ def getFile():
     if request.accept_mimetypes.accept_json:
         return dumps(j)
     return j['content']
+
+
+@vault_bp.route('/upload', methods=['POST'])
+@auth
+def upload():
+    if 'path' not in request.form:
+        return 'no path specified', 400
+    scope, path = request.form['path'].split(':')
+    scope = scope.lower()
+    user = session.get('user')
+    if 'files' not in request.files:
+        return 'no file part', 400
+    if request.files.getlist('files')[0].filename == '':
+        return 'no file specified', 400
+    for file in request.files.getlist('files'):
+        os.makedirs(os.path.dirname(f'content/{scope}/user-{user}/{path}'),
+                    exist_ok=True)
+        file.save(os.path.join(f'content/{scope}/user-{user}/{path}',
+                               secure_filename(file.filename)))
+    return redirect('/vault', 301)
+
+
+@vault_bp.route('/paths', methods=['GET'])
+@auth
+def paths():
+    if not request.accept_mimetypes.accept_json:
+        return ''
+    return dumps(getAllPathsOfUser(session.get('user')))
 
 
 def loadFileFromScope(scope, file):
