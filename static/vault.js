@@ -1,15 +1,69 @@
 registerClickEvents();
 indentNestedFolders();
 
-document.querySelector('#viewer #toolbar .close').addEventListener('click', e => {
-	clearActiveFile();
-	document.querySelector('#viewer').style.display = 'none';
+for (const element of document.querySelectorAll('button.close')) {
+	element.addEventListener('click', e => {
+		for (const c of e.target.classList) {
+			if (c.startsWith('close-target-')) {
+				const targetId = c.split('close-target-')[1];
+				if (targetId == 'viewer') {
+					clearActiveFile();
+				}
+
+				document.querySelector(`#${targetId}`).style.display = 'none';
+			}
+		}
+	});
+}
+
+document.querySelector('#upload').addEventListener('click', async e => {
+	document.querySelector('#uploader').style.display = 'block';
+	document.querySelector('#files').value = '';
+	const r = await fetch('paths', {
+		headers: {
+			Accept: 'application/json',
+		},
+	});
+	const text = await r.text();
+	const paths = JSON.parse(text);
+	const select = document.querySelector('#upload-path');
+	select.innerHTML = '';
+	let option = document.createElement('option');
+	option.disabled = true;
+	option.innerText = 'Public';
+	select.append(option);
+	for (const p of paths.public) {
+		option = document.createElement('option');
+		option.innerText = p;
+		option.value = `PUBLIC:${p}`;
+		select.append(option);
+	}
+
+	option = document.createElement('option');
+	option.disabled = true;
+	option.innerText = 'Private';
+	select.append(option);
+	for (const p of paths.private) {
+		option = document.createElement('option');
+		option.innerText = p;
+		option.value = `PRIVATE:${p}`;
+		select.append(option);
+	}
+});
+
+document.querySelector('#files').addEventListener('change', e => {
+	const files = e.target;
+	const p = document.querySelector('pre#selected-files');
+	p.innerText = '';
+	for (const f of files.files) {
+		p.innerText += `${f.name}\n`;
+	}
 });
 
 document.querySelector('.edit-content').addEventListener('click', e => {
-    const content = document.querySelector('#viewer-contents');
-    content.readOnly = false;
-    content.focus();
+	const content = document.querySelector('#viewer-contents');
+	content.readOnly = false;
+	content.focus();
 });
 
 function registerClickEvents() {
@@ -26,14 +80,14 @@ function registerClickEvents() {
 					Accept: 'application/json',
 				},
 			});
-			context.path = `${path}/${e.innerText}`;
 			const text = await r.text();
 			const fileInfo = JSON.parse(text);
 			context.path = fileInfo.file;
+			context.scope = fileInfo.scope;
 			const element = document.querySelector('#viewer');
 			element.style.display = 'block';
 			document.querySelector('.edit-content').hidden = !fileInfo.owner;
-            document.querySelector('#viewer-contents').readOnly = true;
+			document.querySelector('#viewer-contents').readOnly = true;
 			document.querySelector('.opened-file').innerText = fileInfo.file.split('/').at(-1);
 			if (fileInfo.content == '') {
 				document.querySelector('#viewer-contents').placeholder = 'Empty file';
