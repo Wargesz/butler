@@ -8,17 +8,19 @@ for (const element of document.querySelectorAll('button.close')) {
 				const targetId = c.split('close-target-')[1];
 				if (targetId == 'viewer') {
 					clearActiveFile();
+					updateView('browse');
 				}
 
-				document.querySelector(`#${targetId}`).style.display = 'none';
+				if (targetId == 'uploader') {
+					updateView('browse');
+				}
 			}
 		}
 	});
 }
 
 document.querySelector('#upload').addEventListener('click', async e => {
-	document.querySelector('#uploader').style.display = 'block';
-	document.querySelector('#files').value = '';
+    updateView('upload');
 	const r = await fetch('paths', {
 		headers: {
 			Accept: 'application/json',
@@ -62,6 +64,7 @@ document.querySelector('#files').addEventListener('change', e => {
 
 document.querySelector('.edit-content').addEventListener('click', e => {
 	const content = document.querySelector('#viewer-contents');
+	document.querySelector('.save-editing').hidden = false;
 	content.readOnly = false;
 	content.focus();
 });
@@ -84,8 +87,7 @@ function registerClickEvents() {
 			const fileInfo = JSON.parse(text);
 			context.path = fileInfo.file;
 			context.scope = fileInfo.scope;
-			const element = document.querySelector('#viewer');
-			element.style.display = 'block';
+            updateView('view');
 			document.querySelector('.edit-content').hidden = !fileInfo.owner;
 			document.querySelector('#viewer-contents').readOnly = true;
 			document.querySelector('.opened-file').innerText = fileInfo.file.split('/').at(-1);
@@ -125,5 +127,16 @@ function getNestedLevel(e) {
 function clearActiveFile() {
 	for (const e of document.querySelectorAll('.active-file')) {
 		e.classList.remove('active-file');
+	}
+}
+
+function updateView(newValue) {
+	if (newValue) {
+		context.view = newValue;
+	}
+
+	for (const key in views[context.view]) {
+		document.querySelector(`#${key}`).style.display
+            = views[context.view][key] ? 'none' : 'block';
 	}
 }
