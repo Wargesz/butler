@@ -15,7 +15,7 @@ def vault():
     return render_template('vault.html', public=public, private=private)
 
 
-@vault_bp.route('/file')
+@vault_bp.route('/file', methods=['GET'])
 @auth
 def getFile():
     j = {}
@@ -32,6 +32,32 @@ def getFile():
     if request.accept_mimetypes.accept_json:
         return dumps(j)
     return j['content']
+
+
+@vault_bp.route('/file', methods=['POST'])
+@auth
+def updateFile():
+    if not request.form.get('scope'):
+        return 'scope not specified', 400
+    if not request.form.get('path'):
+        return 'path not specified', 400
+    if not request.form.get('content'):
+        return 'content not specified', 400
+    scope = request.form.get('scope')
+    path = request.form.get('path')
+    content = request.form.get('content')
+    user = session.get('user')
+    if user != getUserFromPath(path):
+        return 'cannot save changes', 401
+    if scope != 'public' or scope != 'private':
+        return 'invalid scope', 401
+    file = secure_filename(path.split('/')[-1])
+    path = secure_filename(path.removesuffix(file)).replace('_', '/')
+    complete_path = f'content/{scope}/{path}/{file}'
+    print(complete_path)
+    with open(complete_path, 'w') as f:
+        f.write(content)
+    return 'ok'
 
 
 @vault_bp.route('/upload', methods=['POST'])
@@ -78,4 +104,5 @@ def loadFileFromScope(scope, file):
 
 
 def getUserFromPath(path):
-    return path.split('/')[0].split('user-')[1]
+    path = secure_filename(path)
+    return path.split('user-')[1].split('_')[0]
