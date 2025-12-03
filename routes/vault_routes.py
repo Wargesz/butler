@@ -54,7 +54,6 @@ def updateFile():
     file = secure_filename(path.split('/')[-1])
     path = secure_filename(path.removesuffix(file)).replace('_', '/')
     complete_path = f'content/{scope}/{path}/{file}'
-    print(complete_path)
     with open(complete_path, 'w') as f:
         f.write(content)
     return 'ok'
@@ -90,13 +89,15 @@ def paths():
 
 def loadFileFromScope(scope, file):
     # file = user-bob/asd
+    filename = secure_filename(file.split('/')[-1])
+    path = secure_filename(file.removesuffix(filename)).replace('_', '/')
     if scope == 'private':
         username = session.get('user')
         if username not in file.split('/')[0]:
             return 'no file'
     content = ''
     try:
-        with open(f'./content/{scope}/{file}') as f:
+        with open(f'./content/{scope}/{path}/{filename}') as f:
             content = f.read()
     except FileNotFoundError:
         return 'no file'
