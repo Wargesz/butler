@@ -22,9 +22,11 @@ def getFile():
     j['file'] = request.args.get('path')
     if j['file'] is None:
         return 'missing path param'
+    if not validFile(j['file']):
+        return 'invalid path', 400
     j['scope'] = request.args.get('scope')
     if j['scope'] is None:
-        return 'missing scope param'
+        return 'missing scope param', 400
     j['content'] = loadFileFromScope(j['scope'],
                                      j['file'])
     j['owner'] = getUserFromPath(j['file']) == session.get('user')
@@ -102,6 +104,12 @@ def loadFileFromScope(scope, file):
     except FileNotFoundError:
         return 'no file'
     return content
+
+
+def validFile(file):
+    # user-{username}/*/{filename}.{type
+    file = secure_filename(file)
+    return file(f'user-{session.get("user")}/') and '.' in file
 
 
 def getUserFromPath(path):
