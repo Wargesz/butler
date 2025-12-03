@@ -14,13 +14,21 @@ for (const element of document.querySelectorAll('button.close')) {
 				if (targetId == 'uploader') {
 					updateView('browse');
 				}
+
+				if (targetId == 'edit-view') {
+					const contents = document.querySelector('#viewer-contents');
+					contents.value = context.content;
+					context.content = '';
+					updateView('view');
+				}
 			}
 		}
 	});
 }
 
 document.querySelector('#upload').addEventListener('click', async e => {
-    updateView('upload');
+	clearActiveFile();
+	updateView('upload');
 	const r = await fetch('paths', {
 		headers: {
 			Accept: 'application/json',
@@ -62,11 +70,25 @@ document.querySelector('#files').addEventListener('change', e => {
 	}
 });
 
-document.querySelector('.edit-content').addEventListener('click', e => {
+document.querySelector('#edit-content').addEventListener('click', e => {
 	const content = document.querySelector('#viewer-contents');
-    updateView('edit');
+	updateView('edit');
+	context.content = content.value;
 	content.readOnly = false;
 	content.focus();
+});
+
+document.querySelector('#save-editing').addEventListener('click', async () => {
+	const content = document.querySelector('#viewer-contents').value;
+	const r = await fetch('file', {
+		method: 'POST',
+		body: new URLSearchParams({
+			content,
+			path: context.path,
+			scope: context.scope,
+		}),
+	});
+	updateView('view');
 });
 
 function registerClickEvents() {
@@ -87,15 +109,20 @@ function registerClickEvents() {
 			const fileInfo = JSON.parse(text);
 			context.path = fileInfo.file;
 			context.scope = fileInfo.scope;
-            updateView('view');
-			document.querySelector('.edit-content').hidden = !fileInfo.owner;
+			context.owner = fileInfo.owner;
+			updateView('view');
+			document.querySelector('#edit-content').style.display
+                = fileInfo.owner ? 'block' : 'none';
 			document.querySelector('#viewer-contents').readOnly = true;
-			document.querySelector('.opened-file').innerText = fileInfo.file.split('/').at(-1);
-			if (fileInfo.content == '') {
-				document.querySelector('#viewer-contents').placeholder = 'Empty file';
-				document.querySelector('#viewer-contents').value = '';
+			document.querySelector('.opened-file').innerText
+                = fileInfo.file.split('/').at(-1);
+			if (fileInfo.content) {
+				document.querySelector('#viewer-contents').value
+                    = fileInfo.content;
 			} else {
-				document.querySelector('#viewer-contents').value = fileInfo.content;
+				document.querySelector('#viewer-contents').placeholder
+                    = 'Empty file';
+				document.querySelector('#viewer-contents').value = '';
 			}
 		});
 	}
@@ -135,8 +162,17 @@ function updateView(newValue) {
 		context.view = newValue;
 	}
 
-	for (const key in views[context.view]) {
-		document.querySelector(`#${key}`).style.display
-            = views[context.view][key] ? 'none' : 'block';
+	if (context.view == 'view') {
+		document.querySelector('#edit-content').style.display
+                        = context.owner ? 'block' : 'none';
+		document.querySelector('#viewer-contents').readOnly = true;
+	}
+
+	for (const id of elements) {
+		document.querySelector(`#${id}`).style.display = 'none';
+	}
+
+	for (const id of views[context.view]) {
+		document.querySelector(`#${id}`).style.display = 'block';
 	}
 }
