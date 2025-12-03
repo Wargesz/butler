@@ -80,6 +80,11 @@ document.querySelector('#edit-content').addEventListener('click', e => {
 
 document.querySelector('#save-editing').addEventListener('click', async () => {
 	const content = document.querySelector('#viewer-contents').value;
+	if (content === context.content) {
+		updateView('view');
+		return;
+	}
+
 	const r = await fetch('file', {
 		method: 'POST',
 		body: new URLSearchParams({
@@ -96,6 +101,7 @@ function registerClickEvents() {
 		e.addEventListener('click', async () => {
 			clearActiveFile();
 			e.classList.add('active-file');
+
 			path = getPathOfElement(e);
 			const r = await fetch('file?' + new URLSearchParams({
 				path: `${path}/${e.innerText}`,
@@ -162,10 +168,13 @@ function updateView(newValue) {
 		context.view = newValue;
 	}
 
-	if (context.view == 'view') {
+	if (context.view === 'view') {
 		document.querySelector('#edit-content').style.display
                         = context.owner ? 'block' : 'none';
 		document.querySelector('#viewer-contents').readOnly = true;
+	}
+
+	if (context.view === 'browse') {
 		context.path = '';
 	}
 
