@@ -51,7 +51,7 @@ def updateFile():
     user = session.get('user')
     if user != getUserFromPath(path):
         return 'cannot save changes', 401
-    if scope != 'public' or scope != 'private':
+    if scope != 'public' and scope != 'private':
         return 'invalid scope', 401
     file = secure_filename(path.split('/')[-1])
     path = secure_filename(path.removesuffix(file)).replace('_', '/')
@@ -107,9 +107,9 @@ def loadFileFromScope(scope, file):
 
 
 def validFile(file):
-    # user-{username}/*/{filename}.{type
+    # user-{username}/*/{filename}.{type}
     file = secure_filename(file)
-    return file(f'user-{session.get("user")}/') and '.' in file
+    return file.startswith('user-') and '.' in file
 
 
 def getUserFromPath(path):
