@@ -166,6 +166,7 @@ function updateView(newValue) {
 		document.querySelector('#edit-content').style.display
                         = context.owner ? 'block' : 'none';
 		document.querySelector('#viewer-contents').readOnly = true;
+		context.path = '';
 	}
 
 	for (const id of elements) {
