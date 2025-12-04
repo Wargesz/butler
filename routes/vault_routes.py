@@ -27,13 +27,12 @@ def getFile():
     j['scope'] = request.args.get('scope')
     if j['scope'] is None:
         return 'missing scope param', 400
-    j['content'] = loadFileFromScope(j['scope'],
-                                     j['file'])
+    j['content'], status = loadFileFromScope(j['scope'], j['file'])
     j['owner'] = getUserFromPath(j['file']) == session.get('user')
     j['scope'] = j['scope']
     if request.accept_mimetypes.accept_json:
         return dumps(j)
-    return j['content']
+    return j['content'], status
 
 
 @vault_bp.route('/file', methods=['POST'])
@@ -50,9 +49,9 @@ def updateFile():
     content = request.form.get('content')
     user = session.get('user')
     if user != getUserFromPath(path):
-        return 'cannot save changes', 401
+        return 'cannot save changes', 403
     if scope != 'public' and scope != 'private':
-        return 'invalid scope', 401
+        return 'invalid scope', 400
     file = secure_filename(path.split('/')[-1])
     path = secure_filename(path.removesuffix(file)).replace('_', '/')
     complete_path = f'content/{scope}/{path}/{file}'
@@ -102,8 +101,8 @@ def loadFileFromScope(scope, file):
         with open(f'./content/{scope}/{path}/{filename}') as f:
             content = f.read()
     except FileNotFoundError:
-        return 'no file'
-    return content
+        return 'no file', 404
+    return content, 200
 
 
 def validFile(file):
