@@ -82,6 +82,7 @@ document.querySelector('#save-editing').addEventListener('click', async () => {
 	const content = document.querySelector('#viewer-contents').value;
 	if (content === context.content) {
 		updateView('view');
+		notify('No changes detected');
 		return;
 	}
 
@@ -93,6 +94,8 @@ document.querySelector('#save-editing').addEventListener('click', async () => {
 			scope: context.scope,
 		}),
 	});
+	const res = await r.text();
+	notify(res);
 	updateView('view');
 });
 
@@ -185,4 +188,23 @@ function updateView(newValue) {
 	for (const id of views[context.view]) {
 		document.querySelector(`#${id}`).style.display = 'block';
 	}
+}
+
+function notify(message) {
+	const n = document.querySelector('#notification');
+	n.animate([
+		{transform: 'translateX(100%)'},
+		{transform: 'translateX(0)'},
+	], {duration: 120});
+	n.innerText = message;
+	n.hidden = false;
+	setTimeout(() => {
+		n.animate([
+			{transform: 'translateX(0)', opacity: 1},
+			{transform: 'translateX(100%)', opacity: 0},
+		], {duration: 120});
+	}, 1580);
+	setTimeout(() => {
+		n.hidden = true;
+	}, 1650);
 }
