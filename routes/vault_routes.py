@@ -58,7 +58,7 @@ def updateFile():
     complete_path = f'content/{scope}/{path}/{file}'
     with open(complete_path, 'w') as f:
         f.write(content)
-    return 'ok'
+    return 'file successfully updated', 201
 
 
 @vault_bp.route('/upload', methods=['POST'])
