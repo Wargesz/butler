@@ -125,7 +125,7 @@ details > summary::-webkit-details-marker {
     display: none;
 }
 
-#toolbar button {
+#toolbar button, #toolbar input {
     float: right;
     margin-bottom: 0.3em;
     margin-left: 0.3em;
