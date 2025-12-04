@@ -1,5 +1,6 @@
-This project uses `uv` instead of `pip`.
-A `.env` should be created with `SECRET` configured.
+> [!IMPORTANT]
+> This project uses `uv` instead of `pip`.
+> A `.env` should be created with `SECRET` configured.
 
 butler
 ======
