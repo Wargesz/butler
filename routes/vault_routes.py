@@ -31,7 +31,7 @@ def getFile():
     j['owner'] = getUserFromPath(j['file']) == session.get('user')
     j['scope'] = j['scope']
     if request.accept_mimetypes.accept_json:
-        return dumps(j)
+        return dumps(j), status
     return j['content'], status
 
 
