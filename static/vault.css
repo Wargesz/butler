@@ -17,6 +17,7 @@ body {
     display: grid;
     background-color: var(--primary-bg);
     grid-template-columns: auto auto auto;
+    overflow-x: hidden;
 }
 
 aside {
