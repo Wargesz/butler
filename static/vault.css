@@ -158,7 +158,7 @@ details > summary::-webkit-details-marker {
     align-items: center;
 }
 
-#status-message {
+#notification {
     position: absolute;
     top: 0;
     right: -100px;
