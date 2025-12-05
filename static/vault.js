@@ -99,6 +99,14 @@ document.querySelector('#save-editing').addEventListener('click', async () => {
 	updateView('view');
 });
 
+document.querySelector('#delete-file').addEventListener('click', async () => {
+	const r = await fetch(`file?path=${context.path}&scope=${context.scope}`, {
+		method: 'DELETE',
+	});
+	const text = await r.text();
+	notify(text);
+});
+
 function registerClickEvents() {
 	for (const e of document.querySelectorAll('.file')) {
 		e.addEventListener('click', async () => {
