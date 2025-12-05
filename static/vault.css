@@ -116,6 +116,12 @@ details > summary::-webkit-details-marker {
     content: '/';
 }
 
+#actions {
+    display: grid;
+    place-items: center;
+    margin-top: 1em;
+}
+
 #viewer, #uploader {
     position: absolute;
     top: 50%;
