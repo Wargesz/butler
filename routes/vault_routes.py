@@ -52,12 +52,33 @@ def updateFile():
         return 'cannot save changes', 403
     if scope != 'public' and scope != 'private':
         return 'invalid scope', 400
-    file = secure_filename(path.split('/')[-1])
-    path = secure_filename(path.removesuffix(file)).replace('_', '/')
+    file, path = unpackPath(path)
     complete_path = f'content/{scope}/{path}/{file}'
     with open(complete_path, 'w') as f:
         f.write(content)
     return 'file successfully updated', 201
+
+
+@vault_bp.route('/file', methods=['DELETE'])
+@auth
+def deleteFile():
+    path = request.args.get('path')
+    if path is None:
+        return 'no path specified', 400
+    if not validFile(path):
+        return 'invalid path', 400
+    user = getUserFromPath(path)
+    if user != session.get('user'):
+        return 'cannot delete file', 403
+    scope = request.args.get('scope')
+    if scope not in ['private', 'public']:
+        return 'wrong path specified', 400
+    file, path = unpackPath(path)
+    try:
+        os.remove(os.path.join('.', 'content', scope, path, file))
+    except FileNotFoundError:
+        return 'invalid file specified', 400
+    return 'file deleted', 200
 
 
 @vault_bp.route('/upload', methods=['POST'])
@@ -90,8 +111,7 @@ def paths():
 
 def loadFileFromScope(scope, file):
     # file = user-bob/asd
-    filename = secure_filename(file.split('/')[-1])
-    path = secure_filename(file.removesuffix(filename)).replace('_', '/')
+    filename, path = unpackPath(file)
     if scope == 'private':
         username = session.get('user')
         if username not in file.split('/')[0]:
@@ -103,6 +123,12 @@ def loadFileFromScope(scope, file):
     except FileNotFoundError:
         return 'no file', 404
     return content, 200
+
+
+def unpackPath(path):
+    file = secure_filename(path.split('/')[-1])
+    path = secure_filename(path.removesuffix(file)).replace('_', '/')
+    return file, path
 
 
 def validFile(file):
