@@ -65,7 +65,7 @@
                 {% endif %}
             </details>
             <div id="actions">
-            <button id="upload" class="btn">Upload</button>
+                <button id="upload" class="btn">Upload</button>
             </div>
         </aside>
         <main>
@@ -76,6 +76,7 @@
                     <button id="edit-content" class="btn">Edit</button>
                     <button id="edit-cancel" class="btn close close-target-edit-view">Cancel</button>
                     <button id="save-editing" class="btn">Save</button>
+                    <button id="delete-file" class="btn">Delete</button>
                 </div>
                 <textarea readonly rows="20" id="viewer-contents"></textarea>
             </div>
@@ -87,11 +88,12 @@
                     <input type="submit" value="Upload" class="btn">
                 </div>
                 <div id="contents">
-                    <input required multiple type="file" name="files" id="files" value="Select files">
-                    <label for="selected-files">Files:</label>
+                    <div>
+                        <label for="upload-path">Upload to:</label>
+                        <select required name="path" id="upload-path"></select>
+                        <input required multiple type="file" name="files" id="files" value="Select files">
+                    </div>
                     <pre id="selected-files"></pre>
-                    <label for="upload-path">Target folder:</label>
-                    <select required name="path" id="upload-path"></select>
                 </div>
             </form>
             <div hidden id="notification"></div>
@@ -110,6 +112,7 @@
             'edit-content',
             'edit-cancel',
             'view-close',
+            'delete-file',
         ]
         const views = {
             browse: [],
