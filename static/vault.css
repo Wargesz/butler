@@ -165,6 +165,17 @@ details > summary::-webkit-details-marker {
     align-items: center;
 }
 
+select {
+    background-color: var(--secondary-bg);
+    padding: 0.5em;
+    border: none;
+    border-radius: 0.5em;
+}
+
+option {
+    padding: 0.5em;
+}
+
 #notification {
     position: absolute;
     top: 0;
