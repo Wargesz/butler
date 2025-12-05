@@ -119,9 +119,6 @@ function registerClickEvents() {
 			context.path = fileInfo.file;
 			context.scope = fileInfo.scope;
 			context.owner = fileInfo.owner;
-			updateView('view');
-			document.querySelector('#edit-content').style.display
-                = fileInfo.owner ? 'block' : 'none';
 			document.querySelector('#viewer-contents').readOnly = true;
 			document.querySelector('.opened-file').innerText
                 = fileInfo.file.split('/').at(-1);
@@ -133,6 +130,8 @@ function registerClickEvents() {
                     = 'Empty file';
 				document.querySelector('#viewer-contents').value = '';
 			}
+
+			updateView('view');
 		});
 	}
 }
@@ -171,22 +170,25 @@ function updateView(newValue) {
 		context.view = newValue;
 	}
 
-	if (context.view === 'view') {
-		document.querySelector('#edit-content').style.display
-                        = context.owner ? 'block' : 'none';
-		document.querySelector('#viewer-contents').readOnly = true;
-	}
-
-	if (context.view === 'browse') {
-		context.path = '';
-	}
-
 	for (const id of elements) {
 		document.querySelector(`#${id}`).style.display = 'none';
 	}
 
 	for (const id of views[context.view]) {
 		document.querySelector(`#${id}`).style.display = 'block';
+	}
+
+	if (context.view === 'view') {
+		document.querySelector('#viewer-contents').readOnly = true;
+		document.querySelector('#edit-content').style.display
+                = context.owner ? 'block' : 'none';
+		document.querySelector('#delete-file').style.display
+                = context.owner ? 'block' : 'none';
+	}
+
+	if (context.view === 'browse') {
+		context.path = '';
+		context.owner = '';
 	}
 }
 
