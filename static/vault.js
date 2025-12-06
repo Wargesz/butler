@@ -146,7 +146,7 @@ function registerClickEvents() {
 
 function indentNestedFolders() {
 	for (const e of document.querySelectorAll('.nested')) {
-		const level = getNestedLevel(e);
+		const level = getNestedLevel(e) + 1;
 		e.style.marginLeft = `${level}em`;
 	}
 }
