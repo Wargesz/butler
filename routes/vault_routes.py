@@ -87,6 +87,9 @@ def upload():
     if 'path' not in request.form:
         return 'no path specified', 400
     scope, path = request.form['path'].split(':')
+    scope = scope.lower()
+    _, path = unpackPath(path)
+    print(path)
     if scope not in ['public', 'private']:
         return 'wrong scope specified', 400
     user = session.get('user')
@@ -94,10 +97,16 @@ def upload():
         return 'no file part', 400
     if request.files.getlist('files')[0].filename == '':
         return 'no file specified', 400
+    folder = request.form['folder']
+    if folder != '':
+        if containsForbiddenCharacter(folder):
+            return 'folder name may not contain special characters', 400
+        folder = f'{secure_filename(folder)}/'
     for file in request.files.getlist('files'):
-        os.makedirs(os.path.dirname(f'content/{scope}/user-{user}/{path}'),
+        os.makedirs(os.path.dirname(
+            f'content/{scope}/user-{user}/{path}/{folder}'),
                     exist_ok=True)
-        file.save(os.path.join(f'content/{scope}/user-{user}/{path}',
+        file.save(os.path.join(f'content/{scope}/user-{user}/{path}/{folder}',
                                secure_filename(file.filename)))
     return redirect('/vault', 301)
 
@@ -136,6 +145,10 @@ def validFile(file):
     # user-{username}/*/{filename}.{type}
     file = secure_filename(file)
     return file.startswith('user-') and '.' in file
+
+
+def containsForbiddenCharacter(s):
+    return any(not c.isalnum() for c in s)
 
 
 def getUserFromPath(path):
