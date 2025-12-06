@@ -87,7 +87,8 @@ def upload():
     if 'path' not in request.form:
         return 'no path specified', 400
     scope, path = request.form['path'].split(':')
-    scope = scope.lower()
+    if scope not in ['public', 'private']:
+        return 'wrong scope specified', 400
     user = session.get('user')
     if 'files' not in request.files:
         return 'no file part', 400
