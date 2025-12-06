@@ -78,6 +78,7 @@ def deleteFile():
         os.remove(os.path.join('.', 'content', scope, path, file))
     except FileNotFoundError:
         return 'invalid file specified', 400
+    deleteDirIfEmpty(scope, path)
     return 'file deleted', 200
 
 
@@ -136,9 +137,19 @@ def loadFileFromScope(scope, file):
 
 
 def unpackPath(path):
-    file = secure_filename(path.split('/')[-1])
+    file = ''
+    if '.' in path:
+        file = secure_filename(path.split('/')[-1])
     path = secure_filename(path.removesuffix(file)).replace('_', '/')
+    print(file, path)
     return file, path
+
+
+def deleteDirIfEmpty(scope, path):
+    full_path = os.path.join('.', 'content', scope, path)
+    for _, dirs, files in os.walk(full_path):
+        if not dirs and not files:
+            os.removedirs(full_path)
 
 
 def validFile(file):
