@@ -165,15 +165,20 @@ details > summary::-webkit-details-marker {
     align-items: center;
 }
 
-select {
+#uploader #toolbar {
+    margin-right: 1em;
+}
+
+#uploader #contents > div > * {
+    display: block;
+    margin: 0.5em;
+}
+
+select, option, input {
     background-color: var(--secondary-bg);
     padding: 0.5em;
     border: none;
     border-radius: 0.5em;
-}
-
-option {
-    padding: 0.5em;
 }
 
 #notification {
