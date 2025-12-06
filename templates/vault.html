@@ -18,7 +18,7 @@
                         <span>{{ entry.username }}</span>
                     </summary>
                     {% for content in entry.content %}
-                    <div class="folder {% if content[0]|nested %} nested nested-{{content[0]|nested}} {% endif%}">
+                    <div class="folder {% if content[0]|nested %} nested nested-{{content[0]|nested}} {% endif %}">
                         <div class="folder-name">
                             {{ content[0]|trailing }}
                         </div>
@@ -27,8 +27,9 @@
                             <li class="file path-user-{{entry.username}}{{content[0]}}">{{ file }}</li>
                             {% endfor %}
                         </div>
-                        {% endfor %}
                     </div>
+
+                    {% endfor %}
                 </details>
                 {% endfor %}
                 {% else %}
@@ -46,7 +47,7 @@
                         <span>{{private.username }}</span>
                     </summary>
                     {% for content in private.content %}
-                    <div class="folder {% if content[0]|nested %} nested nested-{{content[0]|nested}} {% endif%}">
+                    <div class="folder {% if content[0]|nested %} nested nested-{{content[0]|nested}} {% endif %}">
                         <div class="folder-name">
                             {{ content[0]|trailing }}
                         </div>
@@ -56,8 +57,8 @@
                             {% endfor %}
                         </div>
                     </div>
+                    {% endfor %}
                 </details>
-                {% endfor %}
                 {% else %}
                 <div class="empty-vault">
                     No files.
@@ -91,6 +92,7 @@
                     <div>
                         <label for="upload-path">Upload to:</label>
                         <select required name="path" id="upload-path"></select>
+                        <input name="folder" value="" id="new-folder" placeholder="New Folder" title="When specified uploaded files are put into this directory">
                         <input required multiple type="file" name="files" id="files" value="Select files">
                     </div>
                     <pre id="selected-files"></pre>
