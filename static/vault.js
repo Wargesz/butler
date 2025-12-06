@@ -105,6 +105,7 @@ document.querySelector('#delete-file').addEventListener('click', async () => {
 	});
 	const text = await r.text();
 	notify(text);
+    updateView('browse');
 });
 
 function registerClickEvents() {
