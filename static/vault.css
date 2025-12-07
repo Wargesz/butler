@@ -122,7 +122,7 @@ details > summary::-webkit-details-marker {
     margin-top: 1em;
 }
 
-#viewer, #uploader {
+#viewer, #uploader, #pebble-viewer {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -142,7 +142,7 @@ details > summary::-webkit-details-marker {
     vertical-align: baseline;
 }
 
-#viewer-contents {
+#viewer-contents, #pebble-contents {
     white-space: pre-wrap;
     width: 100%;
     resize: none;
@@ -189,4 +189,9 @@ select, option, input {
     padding: 0.5em;
     border-radius: 0.4em;
     background-color: #3C4142;
+}
+
+a.pebble:hover {
+    font-weight: bold;
+    cursor: pointer;
 }
