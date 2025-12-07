@@ -105,7 +105,7 @@ document.querySelector('#delete-file').addEventListener('click', async () => {
 	});
 	const text = await r.text();
 	notify(text);
-    updateView('browse');
+	updateView('browse');
 });
 
 function registerClickEvents() {
@@ -141,6 +141,20 @@ function registerClickEvents() {
 			}
 
 			updateView('view');
+		});
+	}
+
+	for (const element of document.querySelectorAll('a.pebble')) {
+		element.addEventListener('click', async e => {
+			const path = getPathOfElement(e.target);
+			const r = await fetch('file?' + new URLSearchParams({
+				path: `${path}/README.pb`,
+				scope: e.target.classList.contains('private') ? 'private' : 'public',
+			}));
+			const res = JSON.parse(await r.text());
+			clearActiveFile();
+			renderPebble(res.content);
+			updateView('pebble');
 		});
 	}
 }
