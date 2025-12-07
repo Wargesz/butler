@@ -52,6 +52,9 @@
                     <div class="folder {% if content[0]|nested %} nested nested-{{content[0]|nested}} {% endif %}">
                         <div class="folder-name">
                             {{ content[0]|trailing }}
+                            {% if "README.pb" in content[1] %}
+                            <a class="pebble private path-user-{{private.username}}{{content[0]}}">[doc]</a>
+                            {% endif%}
                         </div>
                         <div class="files">
                             {% for file in content[1] %}
