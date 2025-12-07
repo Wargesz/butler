@@ -90,7 +90,6 @@ def upload():
     scope, path = request.form['path'].split(':')
     scope = scope.lower()
     _, path = unpackPath(path)
-    print(path)
     if scope not in ['public', 'private']:
         return 'wrong scope specified', 400
     user = session.get('user')
@@ -103,6 +102,9 @@ def upload():
         if containsForbiddenCharacter(folder):
             return 'folder name may not contain special characters', 400
         folder = f'{secure_filename(folder)}/'
+    for file in request.files.getlist('files'):
+        if '.' not in file.filename:
+            return 'filename is invalid'
     for file in request.files.getlist('files'):
         os.makedirs(os.path.dirname(
             f'content/{scope}/user-{user}/{path}/{folder}'),
@@ -141,7 +143,6 @@ def unpackPath(path):
     if '.' in path:
         file = secure_filename(path.split('/')[-1])
     path = secure_filename(path.removesuffix(file)).replace('_', '/')
-    print(file, path)
     return file, path
 
 
