@@ -1,5 +1,5 @@
 > [!IMPORTANT]
-> This project uses `uv` instead of `pip`.  
+> This project uses `uv` instead of `pip`.
 > A `.env` should be created with `SECRET` configured.
 
 butler
@@ -21,6 +21,19 @@ Upload your files with ease, and share with everyone.
 
 - Choose which files to upload
 - Choose the target directory
+
+#### Document your folders
+
+- Add a README.pb to the folder you want to document and click the button next
+to the folder
+- Write your text in Pebble to make it prettier
+- Start your lines with the option described underneath followed by a whitespace
+and you text:
+- `-` to add a level 3 header
+- `-{number}` to add a level {number} header
+- `-> {text to show} @ {url}` to add anchors with links
+- `-\` to show text as a code snippet
+- `.` to add a list item
 
 ### Midnight
 
