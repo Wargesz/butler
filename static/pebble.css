@@ -1,0 +1,19 @@
+ul.pebble {
+    margin-left: 1em;
+}
+
+.pebble.b {
+    font-weight: bold;
+}
+
+.pebble.i {
+    font-style: italic;
+}
+
+pre.pebble {
+    font-size: 0.9em;
+    font-family: 'monospace';
+    background-color: var(--primary-bg);
+    padding: 0.3em;
+    border-radius: 0.5em;
+}
