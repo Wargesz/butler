@@ -59,6 +59,29 @@ def updateFile():
     return 'file successfully updated', 201
 
 
+@vault_bp.route('/file', methods=['PUT'])
+@auth
+def createFile():
+    if not request.form.get('scope'):
+        return 'scope not specified', 400
+    if not request.form.get('path'):
+        return 'path not specified', 400
+    if not request.form.get('content'):
+        return 'content not specified', 400
+    scope = request.form.get('scope')
+    path = request.form.get('path')
+    content = request.form.get('content')
+    user = session.get('user')
+    path = f'user-{user}{path}'
+    if scope != 'public' and scope != 'private':
+        return 'invalid scope', 400
+    file, path = unpackPath(path)
+    complete_path = f'content/{scope}/{path}/{file}'
+    with open(complete_path, 'w') as f:
+        f.write(content)
+    return 'file successfully updated', 201
+
+
 @vault_bp.route('/file', methods=['DELETE'])
 @auth
 def deleteFile():
