@@ -48,16 +48,17 @@ async function renderPaths(id) {
 	select.innerHTML = '';
 	let group = document.createElement('optgroup');
 	group.label = 'Public';
-    select.append(group);
+	select.append(group);
 	for (const p of paths.public) {
 		const option = document.createElement('option');
 		option.innerText = p;
 		option.value = `PUBLIC:${p}`;
 		group.append(option);
 	}
+
 	group = document.createElement('optgroup');
 	group.label = 'Private';
-    select.append(group);
+	select.append(group);
 	for (const p of paths.private) {
 		const option = document.createElement('option');
 		option.innerText = p;
@@ -89,6 +90,22 @@ document.querySelector('#create').addEventListener('click', e => {
 	renderPaths('new-file-path');
 	updateView('create');
 	document.querySelector('#new-file #toolbar input').focus();
+});
+
+document.querySelector('#save-new-file').addEventListener('click', async () => {
+	const [scope, path] = document.querySelector('#new-file-path').value.split(':');
+	const filename = document.querySelector('#new-file-name').value;
+	const content = document.querySelector('#new-file-content').value;
+	const r = await fetch('file', {
+		method: 'PUT',
+		body: new URLSearchParams({
+			scope: scope.toLowerCase(),
+			path: `${path}/${filename}`,
+			content,
+		}),
+	});
+	const text = await r.text();
+	notify(text);
 });
 
 document.querySelector('#save-editing').addEventListener('click', async () => {
