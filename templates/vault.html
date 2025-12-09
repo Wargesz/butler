@@ -86,7 +86,7 @@
                     <button id="save-editing" class="btn">Save</button>
                     <button id="delete-file" class="btn">Delete</button>
                 </div>
-                <textarea readonly rows="20" id="viewer-contents"></textarea>
+                <textarea readonly class="editor" rows="20" id="viewer-contents"></textarea>
             </div>
             <form class="window" id="uploader" method="POST" enctype="multipart/form-data"
                                                              action="upload">
@@ -111,18 +111,18 @@
                     <span>README.pb</span>
                     <button type="button" class="btn close close-target-uploader">Close</button>
                 </div>
-                <div id="pebble-contents"></div>
+                <div class="editor" id="pebble-contents"></div>
             </div>
             <div id="new-file" class="window">
                 <div id="toolbar">
                     <button type="button" class="btn close close-target-new-file">Close</button>
-                    <button type="button" class="btn">Save</button>
+                    <button id="save-new-file" type="button" class="btn">Save</button>
                     <div>
                         <select required name="path" id="new-file-path"></select>
-                        <input name="file-name" placeholder="Filename">
+                        <input id="new-file-name" placeholder="Filename">
                     </div>
                 </div>
-                <textarea rows="20" id="pebble-contents"></textarea>
+                <textarea rows="20" class="editor" id="new-file-content"></textarea>
             </div>
         </main>
     </body>
