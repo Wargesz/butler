@@ -15,6 +15,10 @@ for (const element of document.querySelectorAll('button.close')) {
 					updateView('browse');
 				}
 
+				if (targetId == 'new-file') {
+					updateView('browse');
+				}
+
 				if (targetId == 'edit-view') {
 					const contents = document.querySelector('#viewer-contents');
 					contents.value = context.content;
@@ -28,7 +32,11 @@ for (const element of document.querySelectorAll('button.close')) {
 
 document.querySelector('#upload').addEventListener('click', async e => {
 	clearActiveFile();
+	renderPaths('upload-path');
 	updateView('upload');
+});
+
+async function renderPaths(id) {
 	const r = await fetch('paths', {
 		headers: {
 			Accept: 'application/json',
@@ -36,30 +44,27 @@ document.querySelector('#upload').addEventListener('click', async e => {
 	});
 	const text = await r.text();
 	const paths = JSON.parse(text);
-	const select = document.querySelector('#upload-path');
+	const select = document.querySelector(`#${id}`);
 	select.innerHTML = '';
-	let option = document.createElement('option');
-	option.disabled = true;
-	option.innerText = 'Public';
-	select.append(option);
+	let group = document.createElement('optgroup');
+	group.label = 'Public';
+    select.append(group);
 	for (const p of paths.public) {
-		option = document.createElement('option');
+		const option = document.createElement('option');
 		option.innerText = p;
 		option.value = `PUBLIC:${p}`;
-		select.append(option);
+		group.append(option);
 	}
-
-	option = document.createElement('option');
-	option.disabled = true;
-	option.innerText = 'Private';
-	select.append(option);
+	group = document.createElement('optgroup');
+	group.label = 'Private';
+    select.append(group);
 	for (const p of paths.private) {
-		option = document.createElement('option');
+		const option = document.createElement('option');
 		option.innerText = p;
 		option.value = `PRIVATE:${p}`;
-		select.append(option);
+		group.append(option);
 	}
-});
+}
 
 document.querySelector('#files').addEventListener('change', e => {
 	const files = e.target;
@@ -76,6 +81,14 @@ document.querySelector('#edit-content').addEventListener('click', e => {
 	context.content = content.value;
 	content.readOnly = false;
 	content.focus();
+});
+
+document.querySelector('#create').addEventListener('click', e => {
+	document.querySelector('#new-file #toolbar input').value = '';
+	document.querySelector('#new-file textarea').value = '';
+	renderPaths('new-file-path');
+	updateView('create');
+	document.querySelector('#new-file #toolbar input').focus();
 });
 
 document.querySelector('#save-editing').addEventListener('click', async () => {
