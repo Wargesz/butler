@@ -52,7 +52,8 @@ def post_login():
     if bcrypt.checkpw(password.encode('utf-8'),
                       user.password.encode('utf-8')):
         res = redirect('/')
-        res.set_cookie('Authorize', signCookie(user))
+        cookie, exp = signCookie(user)
+        res.set_cookie('Authorize', cookie, expires=exp, httponly=True)
         return res
     else:
         return render_template('login.html', error_message='invalid password')
@@ -83,7 +84,8 @@ def post_register():
     DB.commit()
     createContentDir(user)
     res = redirect('/')
-    res.set_cookie('Authorize', signCookie(user))
+    cookie, exp = signCookie(user)
+    res.set_cookie('Authorize', cookie, expires=exp, httponly=True)
     return res
 
 
@@ -107,6 +109,7 @@ def hash_password(plain_password):
 
 
 def signCookie(user):
-    token = jwt.encode({"sub": str(user.id), "exp": datetime.now(
-        tz=timezone.utc) + timedelta(days=3)}, env['SECRET'], algorithm="HS256")
-    return token
+    cookie = {"sub": str(user.id), "exp": datetime.utcnow() +
+              timedelta(days=3)}
+    token = jwt.encode(cookie, env['SECRET'], algorithm="HS256")
+    return token, cookie['exp']
