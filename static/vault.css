@@ -140,6 +140,7 @@ details > summary::-webkit-details-marker {
 #toolbar {
     padding-left: 1em;
     vertical-align: baseline;
+    margin-bottom: 0.4em;
 }
 
 #viewer-contents, #pebble-contents {
@@ -191,7 +192,34 @@ select, option, input {
     background-color: #3C4142;
 }
 
+textarea {
+    outline: none;
+}
+
 a.pebble:hover {
     font-weight: bold;
     cursor: pointer;
+}
+
+#new-file #toolbar {
+    input {
+        float: none;
+    }
+    select {
+        padding: 0;
+        margin-right: 0;
+        display: inline;
+        background-color: var(--primary-bg);
+        text-align: right;
+    }
+    input {
+        margin-left: 0;
+        width: 40%;
+        padding: 0;
+        background-color: var(--primary-bg);
+        display: inline;
+    }
+    input:focus {
+        outline: none;
+    }
 }

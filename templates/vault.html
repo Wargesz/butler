@@ -77,7 +77,7 @@
             </div>
         </aside>
         <main>
-            <div id="viewer">
+            <div id="viewer" class="window">
                 <div id="toolbar">
                     <span class="opened-file"></span>
                     <button id="view-close" class="btn close close-target-viewer">Close</button>
@@ -88,8 +88,8 @@
                 </div>
                 <textarea readonly rows="20" id="viewer-contents"></textarea>
             </div>
-            <form id="uploader" method="POST" enctype="multipart/form-data"
-                                              action="upload">
+            <form class="window" id="uploader" method="POST" enctype="multipart/form-data"
+                                                             action="upload">
                 <div id="toolbar">
                     <span>File uploader</span>
                     <button type="button" class="btn close close-target-uploader">Close</button>
@@ -106,12 +106,21 @@
                 </div>
             </form>
             <div hidden id="notification"></div>
-            <div id="pebble-viewer">
+            <div id="pebble-viewer" class="window">
                 <div id="toolbar">
                     <span>README.pb</span>
                     <button type="button" class="btn close close-target-uploader">Close</button>
                 </div>
                 <div id="pebble-contents"></div>
+            </div>
+            <div id="new-file" class="window">
+                <div id="toolbar">
+                    <label for="new-file-path">Target folder:</label>
+                    <select id="new-file-path" name="path"></select>
+                    <input name="file-name" placeholder="File name" required>
+                    <button type="button" class="btn close close-target-new-file">Close</button>
+                </div>
+                <textarea rows="20" id="pebble-contents"></textarea>
             </div>
         </main>
     </body>
@@ -130,6 +139,7 @@
             'view-close',
             'delete-file',
             'pebble-viewer',
+            'new-file',
         ]
         const views = {
             browse: [],
@@ -147,6 +157,9 @@
             ],
             pebble: [
                 'pebble-viewer',
+            ],
+            create: [
+                'new-file',
             ],
         }
     </script>
