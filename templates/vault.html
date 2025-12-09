@@ -115,10 +115,12 @@
             </div>
             <div id="new-file" class="window">
                 <div id="toolbar">
-                    <label for="new-file-path">Target folder:</label>
-                    <select id="new-file-path" name="path"></select>
-                    <input name="file-name" placeholder="File name" required>
                     <button type="button" class="btn close close-target-new-file">Close</button>
+                    <button type="button" class="btn">Save</button>
+                    <div>
+                        <select required name="path" id="new-file-path"></select>
+                        <input name="file-name" placeholder="Filename">
+                    </div>
                 </div>
                 <textarea rows="20" id="pebble-contents"></textarea>
             </div>
