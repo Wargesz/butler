@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, Text, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from controllers.db import DB, Base
+from datetime import datetime
 
 
 class CRUDMixin:
@@ -32,7 +33,7 @@ class User(Base, CRUDMixin):
         return f'<User {self.username!r}>'
 
 
-class Midnight(Base):
+class Midnight(Base, CRUDMixin):
     __tablename__ = 'midnight'
     id = Column(Integer, primary_key=True)
     editor = Column(Text)
@@ -41,3 +42,15 @@ class Midnight(Base):
     end_date = Column(Date)
     edited_file = Column(Text)
     user_id = Column(Integer, ForeignKey('user.id'))
+
+    def __init__(self, editor, seconds, start, end, file, user: User):
+        self.editor = editor
+        self.seconds = seconds
+        self.start_date = datetime.strptime(start, '%b-%d_%H:%M:%S')
+        self.end_date = datetime.strptime(end, '%b-%d_%H:%M:%S')
+        self.edited_file = file
+        self.user_id = user.id
+
+    def __repr__(self):
+        return f'<Midnight {self.edited_file!r} \
+                {self.start_date!r}-{self.end_date}>'
