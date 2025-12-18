@@ -149,7 +149,7 @@ def upload():
                     exist_ok=True)
         file.save(os.path.join(f'content/{scope}/user-{user}/{path}/{folder}',
                                secure_filename(file.filename)))
-    return redirect(url_for('/vault'), 301)
+    return redirect(url_for('vault.vault'), 301)
 
 
 @vault_bp.route('/paths', methods=['GET'])
