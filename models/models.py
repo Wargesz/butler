@@ -1,4 +1,4 @@
-from sqlalchemy import (Column, Integer, Text, Datetime, ForeignKey,
+from sqlalchemy import (Column, Integer, Text, DateTime, ForeignKey,
                         UniqueConstraint)
 from sqlalchemy.orm import relationship
 from controllers.db import DB, Base
@@ -39,8 +39,8 @@ class Midnight(Base, CRUDMixin):
     id = Column(Integer, primary_key=True)
     editor = Column(Text, nullable=False)
     seconds = Column(Integer, nullable=False)
-    start_date = Column(Datetime, nullable=False)
-    end_date = Column(Datetime, nullable=False)
+    start_date = Column(DateTime, nullable=False)
+    end_date = Column(DateTime, nullable=False)
     edited_file = Column(Text, nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
     __table_args__ = (UniqueConstraint('start_date', 'end_date', 'edited_file',
