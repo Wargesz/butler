@@ -4,6 +4,7 @@ from routes.vault_routes import vault_bp
 from routes.midnight_routes import midnight_bp
 from controllers.db import setup_db, DB
 from dotenv import dotenv_values
+from middleware.prefix import PrefixMiddleware
 
 env = dotenv_values('.env')
 
@@ -25,6 +26,8 @@ def nested(s):
 
 app.jinja_env.filters['trailing'] = trailing
 app.jinja_env.filters['nested'] = nested
+
+app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix='/butler')
 
 
 @app.teardown_appcontext
