@@ -13,9 +13,10 @@ def midnight():
 
 @midnight_bp.route('/mno', methods=['POST'])
 def midnight_post():
-    if not validMidnight(request.form):
+    form = request.form
+    if not validMidnight(form):
         return 'wrong parameters', 400
-    saveMidnight(request.form)
+    saveMidnight(form)
     return 'ok'
 
 
