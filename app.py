@@ -37,4 +37,4 @@ def shutdown_session(exception=None):
 
 if __name__ == '__main__':
     setup_db()
-    app.run(port=8080, debug=True)
+    app.run(port=8080)
