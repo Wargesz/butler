@@ -91,6 +91,8 @@ def get_register():
 
 @root_bp.route('/register', methods=['POST'])
 def post_register():
+    return render_template('register.html', error_message='registration is \
+            currently disabled')
     username = request.form['username']
     if username == "":
         return render_template('register.html', error_message='no username \
