@@ -1,0 +1,5 @@
+svg path:hover {
+    filter: brightness(125%);
+    transform: scale(101%);
+    cursor: pointer;
+}
