@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, session
 from models.models import Midnight, User
 from controllers.statements import getUserActivity
+from middleware.auth import auth
 from json import dumps
 
 midnight_bp = Blueprint('midnight', __name__)
@@ -9,6 +10,7 @@ REQUIRED_FIELDS = ['editor', 'seconds', 'start', 'end', 'api-key', 'file']
 
 
 @midnight_bp.route('/')
+@auth
 def midnight():
     return render_template('midnight.html')
 
@@ -23,6 +25,7 @@ def midnight_post():
 
 
 @midnight_bp.route('/activity', methods=['GET'])
+@auth
 def activity():
     d = {}
     user = session.get('user')
