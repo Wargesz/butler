@@ -1,5 +1,7 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, render_template, session
 from models.models import Midnight, User
+from controllers.statements import getUserActivity
+from json import dumps
 
 midnight_bp = Blueprint('midnight', __name__)
 
@@ -8,7 +10,7 @@ REQUIRED_FIELDS = ['editor', 'seconds', 'start', 'end', 'api-key', 'file']
 
 @midnight_bp.route('/')
 def midnight():
-    return "midnight"
+    return render_template('midnight.html')
 
 
 @midnight_bp.route('/mno', methods=['POST'])
@@ -18,6 +20,16 @@ def midnight_post():
         return 'wrong parameters', 400
     saveMidnight(form)
     return 'ok'
+
+
+@midnight_bp.route('/activity', methods=['GET'])
+def activity():
+    d = {}
+    user = session.get('user')
+    results = getUserActivity(user)
+    for res in results:
+        d[res[0]] = res[1]
+    return dumps(d)
 
 
 def validMidnight(form):
