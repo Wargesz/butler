@@ -19,8 +19,8 @@ function drawPieChart(values) {
 		const dString = `M ${origo} L ${start} A ${size},${size} 0 ${largeArc} ${reverse} ${end} L ${origo} Z`;
 		path.setAttribute('d', dString);
 		path.setAttribute('fill', c);
-		path.classList.add(Object.keys(values)[i]);
-		path.style.opacity = '85%';
+		path.classList.add(cleanPath(Object.keys(values)[i]));
+		path.style.opacity = '70%';
 		path.addEventListener('mouseover', () => {});
 		offset += element;
 		svgs.append(path);
@@ -45,7 +45,7 @@ function calculateSlices(n) {
 
 function getCoords(rad) {
 	rad *= Math.PI * 2;
-	rad += Math.PI / 4;
+	rad += Math.PI * 0.5;
 	return [size * Math.sin(rad), -size * Math.cos(rad)];
 }
 
