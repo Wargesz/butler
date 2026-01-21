@@ -4,14 +4,27 @@
         <meta charset="UTF-8">
         <title>butler. - Midnight</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='svg.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='midnight.css') }}">
     </head>
     <body>
-        <svg viewBox="-152 -152 330 304" id="svgs" width="300" height="330"
-                                                               xmlns="http://www.w3.org/2000/svg">
-        </svg>
-        <ol id="projects">
-        </ol>
+        <div id="tabs">
+            <button class="tab btn">Total</button>
+            <button class="tab btn">Project</button>
+        </div>
+        <span class="content">
+            <svg viewBox="-152 -152 330 304" id="svgs" width="300" height="330"
+                                                                   xmlns="http://www.w3.org/2000/svg">
+            </svg>
+            <ol id="entries">
+            </ol>
+        </span>
     </body>
+    <script>
+        const context = {
+            tab: 'total',
+            project: '',
+        }
+    </script>
     <script src="{{ url_for('static', filename='svg.js') }}"></script>
     <script src="{{ url_for('static', filename='midnight.js') }}"></script>
 </html>
