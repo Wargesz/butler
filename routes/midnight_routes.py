@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template, session
 from models.models import Midnight, User
-from controllers.statements import getUserActivity
+from controllers.statements import getUserActivity, getProjectActivity
 from middleware.auth import auth
 from json import dumps
 
@@ -27,9 +27,17 @@ def midnight_post():
 @midnight_bp.route('/activity', methods=['GET'])
 @auth
 def activity():
+    tab = request.args.get('tab')
+    if not tab:
+        return 'tab not specified'
     d = {}
     user = session.get('user')
-    results = getUserActivity(user)
+    results = []
+    if tab == 'total':
+        results = getUserActivity(user)
+    project = request.args.get('project')
+    if tab == 'project' and project:
+        results = getProjectActivity(user, project)
     for res in results:
         d[res[0]] = res[1]
     return dumps(d)
