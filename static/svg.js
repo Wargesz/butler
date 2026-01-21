@@ -4,20 +4,13 @@ const xmlnsString = 'http://www.w3.org/2000/svg';
 const size = 150;
 const origo = '0 0';
 
-function genRandomValues(n) {
-	const values = [];
-	for (let i = 0; i < (Math.random() * n) + 1; i++) {
-		values.push((Math.random() * 100) + 1);
-	}
-
-	return values;
-}
-
 function drawPieChart(values) {
 	clear();
-	const n = calculateSlices(values);
+	const n = calculateSlices(Object.values(values));
 	let offset = 0;
+	let i = 0;
 	for (const element of n) {
+		const c = genRandomColor();
 		const start = getCoords(offset).join(' ');
 		const end = getCoords(offset + element).join(' ');
 		const largeArc = element >= 0.5 ? '1' : '0';
@@ -25,11 +18,13 @@ function drawPieChart(values) {
 		const path = document.createElementNS(xmlnsString, 'path');
 		const dString = `M ${origo} L ${start} A ${size},${size} 0 ${largeArc} ${reverse} ${end} L ${origo} Z`;
 		path.setAttribute('d', dString);
-		path.setAttribute('fill', genRandomColor());
-		path.setAttribute('stroke', 'black');
-		path.setAttribute('stroke-width', 1.5);
+		path.setAttribute('fill', c);
+		path.classList.add(Object.keys(values)[i]);
+		path.style.opacity = '85%';
+		path.addEventListener('mouseover', () => {});
 		offset += element;
 		svgs.append(path);
+		i++;
 	}
 }
 
