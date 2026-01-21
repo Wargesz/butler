@@ -1,7 +1,7 @@
 getStats();
 
 async function getStats() {
-	const r = await fetch('activity');
+	const r = await fetch(`activity?tab=${context.tab}&project=${context.project}`);
 	if (r.status != 200) {
 		console.log('Could not load activity data.');
 		return;
@@ -9,11 +9,11 @@ async function getStats() {
 
 	const d = JSON.parse(await r.text());
 	drawPieChart(d);
-	const list = document.querySelector('#projects');
+	const list = document.querySelector('ol');
 	for (const k of Object.keys(d)) {
 		const li = document.createElement('li');
 		li.innerText = `${k}: ${formatAsTime(d[k])}`;
-		li.classList.add(k);
+		li.classList.add(cleanPath(k));
 		list.append(li);
 	}
 
@@ -42,4 +42,20 @@ function addPathListeners() {
 				.fontWeight = '';
 		});
 	}
+}
+
+function setContext(tab, project) {
+	context.tab = tab;
+	context.project = project;
+	clearContents();
+	getStats();
+}
+
+function clearContents() {
+	document.querySelector('ol').innerHTML = '';
+	document.querySelector('svg').innerHTML = '';
+}
+
+function cleanPath(path) {
+	return path.replaceAll('/', '_').replaceAll('.', '-');
 }
