@@ -25,18 +25,40 @@ GROUP BY 1
 ORDER BY 2 DESC;
 """
 
+stmt['GET_PROJECT_HEATMAP_DATA'] = """
+Select DATE, COUNT(edited_file) AS files_count FROM (
+SELECT DISTINCT DATE(start_date) AS date, edited_file
+FROM midnight
+WHERE user_id IS (SELECT id FROM user WHERE username is :u)
+AND INSTR(edited_file, :p)
+)
+GROUP BY 1
+ORDER BY 1 DESC
+LIMIT 364;
+"""
+
 
 def getUserActivity(username):
-    user = User.query.filter(User.username == username).first()
+    user = getUserFromUsername(username)
     return eval(stmt['GET_USER_ACTIVITY'], {'p': user.project_folder,
                                             'u': user.username})
 
 
 def getProjectActivity(username, projectname):
-    user = User.query.filter(User.username == username).first()
+    user = getUserFromUsername(username)
     return eval(stmt['GET_PROJECT_ACTIVITY'], {'p': user.project_folder,
                                                'u': user.username,
                                                'f': projectname})
+
+
+def getHeatMap(username, projectname=''):
+    user = getUserFromUsername(username)
+    return eval(stmt['GET_PROJECT_HEATMAP_DATA'], {'u': user.username,
+                                                   'p': projectname})
+
+
+def getUserFromUsername(username) -> User:
+    return User.query.filter(User.username == username).first()
 
 
 def eval(stmt, p):
