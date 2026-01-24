@@ -41,8 +41,8 @@ body {
 .content {
     background-color: var(--secondary-bg);
     color: white;
-    display: inline;
     padding: 2em;
+    height: auto;
 }
 
 .btn {
@@ -56,4 +56,21 @@ body {
 .btn:hover {
     cursor: pointer;
     border: thin solid white;
+}
+
+#project ol {
+    overflow: auto;
+}
+
+table#heatmap {
+    td {
+        border-radius: 0.2em;
+        background-color: gray;
+        width: 0.9em;
+        height: 0.9em;
+    }
+    position: absolute;
+    right: 0;
+    margin-inline: auto;
+    width: fit-content;
 }
