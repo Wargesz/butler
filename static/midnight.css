@@ -20,16 +20,27 @@ a {
 body {
     font-family: Poppins, Helvetica, serif;
     background-color: var(--primary-bg);
-    color: var(--secondary-bg);
+    color: white;
     display: flex;
     margin: 0 auto;
     justify-content: center;
     align-items: center;
 }
 
+#tabs {
+    .btn {
+        display: block;
+        margin: 0.5em;
+        width: 100%;
+    }
+    position: absolute;
+    top: 50%;
+    left: 0%;
+}
+
 .content {
     background-color: var(--secondary-bg);
-    color: var(--secondary-bg);
+    color: white;
     display: inline;
     padding: 2em;
 }
