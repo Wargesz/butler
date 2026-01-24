@@ -8,14 +8,22 @@
     </head>
     <body>
         <div id="tabs">
-            <button class="tab btn">Total</button>
-            <button class="tab btn">Project</button>
+            <button onclick="setContext('total')" class="tab btn">Total</button>
+            <button onclick="setContext('project', Object.keys(context.data)[0])"class="tab btn">Project</button>
         </div>
-        <span class="content">
+        <span class="content" id="total">
             <svg viewBox="-152 -152 330 304" id="svgs" width="300" height="330"
                                                                    xmlns="http://www.w3.org/2000/svg">
             </svg>
             <ol id="entries">
+            </ol>
+        </span>
+        <span class="content" id="project">
+            <select id="project-view-select">
+            </select>
+            <table id="heatmap">
+            </table>
+            <ol id="time">
             </ol>
         </span>
     </body>
@@ -23,6 +31,8 @@
         const context = {
             tab: 'total',
             project: '',
+            views: ['total', 'project'],
+            data: [],
         }
     </script>
     <script src="{{ url_for('static', filename='svg.js') }}"></script>
