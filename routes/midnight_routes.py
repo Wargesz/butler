@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, session
 from models.models import Midnight, User
-from controllers.statements import getUserActivity, getProjectActivity
+from controllers.statements import (getUserActivity, getProjectActivity,
+                                    getHeatMap)
 from middleware.auth import auth
 from json import dumps
 
@@ -35,11 +36,19 @@ def activity():
     results = []
     if tab == 'total':
         results = getUserActivity(user)
+        for res in results:
+            d[res[0]] = res[1]
+        return dumps(d)
+    d['heatmap'] = {}
+    d['time'] = {}
     project = request.args.get('project')
     if tab == 'project' and project:
+        results = getHeatMap(user, project)
+        for res in results:
+            d['heatmap'][res[0]] = res[1]
         results = getProjectActivity(user, project)
-    for res in results:
-        d[res[0]] = res[1]
+        for res in results:
+            d['time'][res[0]] = res[1]
     return dumps(d)
 
 
