@@ -30,7 +30,9 @@ Select DATE, COUNT(edited_file) AS files_count FROM (
 SELECT DISTINCT DATE(start_date) AS date, edited_file
 FROM midnight
 WHERE user_id IS (SELECT id FROM user WHERE username is :u)
-AND INSTR(edited_file, :p)
+AND INSTR(edited_file,
+    CONCAT(:f, :p, "/")
+)
 )
 GROUP BY 1
 ORDER BY 1 DESC
@@ -54,6 +56,7 @@ def getProjectActivity(username, projectname):
 def getHeatMap(username, projectname=''):
     user = getUserFromUsername(username)
     return eval(stmt['GET_PROJECT_HEATMAP_DATA'], {'u': user.username,
+                                                   'f': user.project_folder,
                                                    'p': projectname})
 
 
