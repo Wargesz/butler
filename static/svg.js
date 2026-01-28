@@ -1,12 +1,12 @@
-const svgs = document.querySelector('#svgs');
 const letters = '0123456789ABCDEF';
 const xmlnsString = 'http://www.w3.org/2000/svg';
 const size = 150;
 const origo = '0 0';
 
-function drawPieChart(values) {
-	clear();
+function drawPieChart(values, target) {
+	clear(target);
 	const n = calculateSlices(Object.values(values));
+    const svgs = document.querySelector(target);
 	let offset = 0;
 	let i = 0;
 	for (const element of n) {
@@ -49,8 +49,8 @@ function getCoords(rad) {
 	return [size * Math.sin(rad), -size * Math.cos(rad)];
 }
 
-function clear() {
-	svgs.innerHTML = '';
+function clear(target) {
+	document.querySelector(target).innerHTML = '';
 }
 
 function genRandomColor() {
