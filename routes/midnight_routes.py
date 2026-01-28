@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, session
 from models.models import Midnight, User
 from controllers.statements import (getUserActivity, getProjectActivity,
-                                    getHeatMap, getUserHeatMap)
+                                    getHeatMap, getUserHeatMap, getEditorData)
 from middleware.auth import auth
 from json import dumps
 
@@ -44,12 +44,16 @@ def getTotalValues(user):
     d = {}
     d['heatmap'] = {}
     d['time'] = {}
+    d['editor'] = {}
     results = getUserActivity(user)
     for res in results:
         d['time'][res[0]] = res[1]
     results = getUserHeatMap(user)
     for res in results:
         d['heatmap'][res[0]] = res[1]
+    results = getEditorData(user)
+    for res in results:
+        d['editor'][res[0]] = res[1]
     return d
 
 
