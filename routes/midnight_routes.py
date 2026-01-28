@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, session
 from models.models import Midnight, User
 from controllers.statements import (getUserActivity, getProjectActivity,
-                                    getHeatMap)
+                                    getHeatMap, getUserHeatMap)
 from middleware.auth import auth
 from json import dumps
 
@@ -31,25 +31,39 @@ def activity():
     tab = request.args.get('tab')
     if not tab:
         return 'tab not specified'
-    d = {}
     user = session.get('user')
-    results = []
     if tab == 'total':
-        results = getUserActivity(user)
-        for res in results:
-            d[res[0]] = res[1]
-        return dumps(d)
-    d['heatmap'] = {}
-    d['time'] = {}
+        return getTotalValues(user)
     project = request.args.get('project')
     if tab == 'project' and project:
-        results = getHeatMap(user, project)
-        for res in results:
-            d['heatmap'][res[0]] = res[1]
-        results = getProjectActivity(user, project)
-        for res in results:
-            d['time'][res[0]] = res[1]
-    return dumps(d)
+        return getProjectValues(user, project)
+    return dumps({'err': 'invalid tab'}), 400
+
+
+def getTotalValues(user):
+    d = {}
+    d['heatmap'] = {}
+    d['time'] = {}
+    results = getUserActivity(user)
+    for res in results:
+        d['time'][res[0]] = res[1]
+    results = getUserHeatMap(user)
+    for res in results:
+        d['heatmap'][res[0]] = res[1]
+    return d
+
+
+def getProjectValues(user, project):
+    d = {}
+    d['heatmap'] = {}
+    d['time'] = {}
+    results = getHeatMap(user, project)
+    for res in results:
+        d['heatmap'][res[0]] = res[1]
+    results = getProjectActivity(user, project)
+    for res in results:
+        d['time'][res[0]] = res[1]
+    return d
 
 
 def validMidnight(form):
