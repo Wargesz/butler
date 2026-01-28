@@ -5,31 +5,44 @@ from controllers.db import DB
 stmt = {}
 
 stmt['GET_USER_ACTIVITY'] = """
-SELECT substr(replace(edited_file, :p, ""), 0,
-        instr(replace(edited_file, :p, ""), "/")) AS project,
-        sum(seconds) AS total_time
+SELECT SUBSTR(REPLACE(edited_file, :p, ""), 0,
+        INSTR(REPLACE(edited_file, :p, ""), "/")) AS project,
+        SUM(seconds) AS total_time
         FROM midnight
-        WHERE user_id == (SELECT id FROM user WHERE username == :u)
+        WHERE user_id == :i
         GROUP BY 1
         ORDER BY 2 DESC
         LIMIT 10;
 """
 
 stmt['GET_PROJECT_ACTIVITY'] = """
-SELECT substr(edited_file, length(concat(:p, "/", :f)) + 1) as file,
-sum(seconds) AS total_time
+SELECT replace(edited_file, CONCAT(:f, :p, "/"), "") as file,
+SUM(seconds) AS total_time
 FROM midnight
-WHERE user_id == (SELECT id FROM user WHERE username == :u)
-AND instr(edited_file, :f)
+WHERE user_id == :i
+AND INSTR(edited_file,
+    CONCAT(:f, :p, "/")
+)
 GROUP BY 1
 ORDER BY 2 DESC;
+"""
+
+stmt['GET_TOTAL_HEATMAP_DATA'] = """
+SELECT date, COUNT(edited_file) FROM  (
+    SELECT DISTINCT DATE(start_date) as date, edited_file
+    FROM midnight
+    WHERE user_id == :i
+)
+GROUP BY 1
+ORDER BY 1 DESC
+LIMIT 364;
 """
 
 stmt['GET_PROJECT_HEATMAP_DATA'] = """
 Select DATE, COUNT(edited_file) AS files_count FROM (
 SELECT DISTINCT DATE(start_date) AS date, edited_file
 FROM midnight
-WHERE user_id IS (SELECT id FROM user WHERE username is :u)
+WHERE user_id IS :i
 AND INSTR(edited_file,
     CONCAT(:f, :p, "/")
 )
@@ -43,19 +56,24 @@ LIMIT 364;
 def getUserActivity(username):
     user = getUserFromUsername(username)
     return eval(stmt['GET_USER_ACTIVITY'], {'p': user.project_folder,
-                                            'u': user.username})
+                                            'i': user.id})
+
+
+def getUserHeatMap(username):
+    user = getUserFromUsername(username)
+    return eval(stmt['GET_TOTAL_HEATMAP_DATA'], {'i': user.id})
 
 
 def getProjectActivity(username, projectname):
     user = getUserFromUsername(username)
-    return eval(stmt['GET_PROJECT_ACTIVITY'], {'p': user.project_folder,
-                                               'u': user.username,
-                                               'f': projectname})
+    return eval(stmt['GET_PROJECT_ACTIVITY'], {'f': user.project_folder,
+                                               'i': user.id,
+                                               'p': projectname})
 
 
 def getHeatMap(username, projectname=''):
     user = getUserFromUsername(username)
-    return eval(stmt['GET_PROJECT_HEATMAP_DATA'], {'u': user.username,
+    return eval(stmt['GET_PROJECT_HEATMAP_DATA'], {'i': user.id,
                                                    'f': user.project_folder,
                                                    'p': projectname})
 
