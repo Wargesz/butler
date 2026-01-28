@@ -52,6 +52,14 @@ ORDER BY 1 DESC
 LIMIT 364;
 """
 
+stmt['GET_EDITOR_DATA'] = """
+SELECT editor, SUM(seconds)
+FROM midnight
+WHERE user_id == :i
+GROUP BY 1
+ORDER BY 1 DESC;
+"""
+
 
 def getUserActivity(username):
     user = getUserFromUsername(username)
@@ -76,6 +84,11 @@ def getHeatMap(username, projectname=''):
     return eval(stmt['GET_PROJECT_HEATMAP_DATA'], {'i': user.id,
                                                    'f': user.project_folder,
                                                    'p': projectname})
+
+
+def getEditorData(username):
+    user = getUserFromUsername(username)
+    return eval(stmt['GET_EDITOR_DATA'], {'i': user.id})
 
 
 def getUserFromUsername(username) -> User:
