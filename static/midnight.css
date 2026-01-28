@@ -18,6 +18,9 @@ a {
 }
 
 body {
+    span div {
+        display: flex;
+    }
     font-family: Poppins, Helvetica, serif;
     background-color: var(--primary-bg);
     color: white;
@@ -65,12 +68,16 @@ body {
 table#heatmap {
     td {
         border-radius: 0.2em;
-        background-color: gray;
+        background-color: #444;
         width: 0.9em;
         height: 0.9em;
+        margin: 0.2em;
     }
     position: absolute;
     right: 0;
     margin-inline: auto;
     width: fit-content;
+    background-color: #222;
+    padding: 0.5em;
+    border-radius: 0.5em;
 }
