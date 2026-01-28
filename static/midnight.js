@@ -20,6 +20,7 @@ async function getStats() {
 		list.append(li);
 	}
 
+	renderTotalHeatMap(d.heatmap);
 	loadProjectSelector(d.time);
 	addPathListeners();
 }
@@ -45,10 +46,10 @@ async function getProjectStats() {
 	renderProjectHeatMap(d.heatmap);
 }
 
-function renderProjectHeatMap(d) {
+function renderHeatMap(d, target) {
 	const date = new Date();
 	date.setDate(date.getDate() - 364);
-	const table = document.querySelector('#project table');
+	const table = document.querySelector(target);
 	table.innerHTML = '';
 	for (let i = 0; i < 52; i++) {
 		const row = document.createElement('tr');
@@ -62,11 +63,18 @@ function renderProjectHeatMap(d) {
 
 		table.append(row);
 	}
-
 	for (const k of Object.keys(d)) {
-		const cell = document.querySelector(`.date-${k}`);
+		const cell = document.querySelector(`${target} .date-${k}`);
 		cell.style.backgroundColor = 'green';
 	}
+}
+
+function renderTotalHeatMap(d) {
+	renderHeatMap(d, '#total #heatmap');
+}
+
+function renderProjectHeatMap(d) {
+	renderHeatMap(d, '#project #heatmap');
 }
 
 function renderProjectTime(d) {
