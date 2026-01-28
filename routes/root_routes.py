@@ -7,7 +7,8 @@ from controllers.db import DB
 from controllers.content import createContentDir
 from models.models import User
 from middleware.auth import auth
-from datetime import datetime, timezone, timedelta
+from json import dumps
+from datetime import datetime, timedelta
 import bcrypt
 import jwt
 
@@ -26,8 +27,32 @@ def favicon():
 @root_bp.route('/')
 @auth
 def root():
+    user = User.query.filter(User.username == session.get('user')).first()
     print(f'authed: {session.get('user')}')
-    return render_template('index.html')
+    return render_template('index.html', projects_folder=user.project_folder,
+                           api_key=user.api_key)
+
+
+@root_bp.route('/user', methods=['POST'])
+@auth
+def updateSetting():
+    param = request.form.get('param')
+    value = request.form.get('value')
+    if not param or not value:
+        return dumps({'status': 'bad request'})
+    user = User.query.filter(User.username == session.get('user')).first()
+    if param == 'home-folder':
+        if param[-1] != '/':
+            param = param + '/'
+        user.project_folder = value
+        user.save()
+    if param == 'api-key':
+        keys = User.query.with_entities(User.api_key).all()
+        newKey = generate_api_key(keys)
+        user.api_key = newKey
+        user.save()
+        return dumps({'status': 'Success', 'value': newKey})
+    return dumps({'status': 'Success'})
 
 
 @root_bp.route('/login', methods=['GET'])
