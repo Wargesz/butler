@@ -11,18 +11,26 @@ async function getStats() {
 
 	const d = JSON.parse(await r.text());
 	context.data = d;
-	drawPieChart(d.time);
-	const list = document.querySelector('#total ol');
-	for (const k of Object.keys(d.time)) {
-		const li = document.createElement('li');
-		li.innerText = `${k}: ${formatAsTime(d.time[k])}`;
-		li.classList.add(cleanPath(k));
-		list.append(li);
-	}
-
+	loadTotalProjectData(d);
 	renderTotalHeatMap(d.heatmap);
 	loadProjectSelector(d.time);
 	addPathListeners();
+}
+
+function loadTotalProjectData(d) {
+    drawChartTimeData(d.time, '#projects-svg', '#total #projects ol#entries');
+    drawChartTimeData(d.editor, '#editor-svg', '#total #editors ol#entries');
+}
+
+function drawChartTimeData(d, chartTarget, infoTarget) {
+	drawPieChart(d, chartTarget);
+	const list = document.querySelector(infoTarget);
+	for (const k of Object.keys(d)) {
+		const li = document.createElement('li');
+		li.innerText = `${k}: ${formatAsTime(d[k])}`;
+		li.classList.add(cleanPath(k));
+		list.append(li);
+	}
 }
 
 function loadProjectSelector(d) {
@@ -63,6 +71,7 @@ function renderHeatMap(d, target) {
 
 		table.append(row);
 	}
+
 	for (const k of Object.keys(d)) {
 		const cell = document.querySelector(`${target} .date-${k}`);
 		cell.style.backgroundColor = 'green';
