@@ -11,16 +11,16 @@ async function getStats() {
 
 	const d = JSON.parse(await r.text());
 	context.data = d;
-	drawPieChart(d);
+	drawPieChart(d.time);
 	const list = document.querySelector('#total ol');
-	for (const k of Object.keys(d)) {
+	for (const k of Object.keys(d.time)) {
 		const li = document.createElement('li');
-		li.innerText = `${k}: ${formatAsTime(d[k])}`;
+		li.innerText = `${k}: ${formatAsTime(d.time[k])}`;
 		li.classList.add(cleanPath(k));
 		list.append(li);
 	}
 
-	loadProjectSelector(d);
+	loadProjectSelector(d.time);
 	addPathListeners();
 }
 
