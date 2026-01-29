@@ -30,6 +30,16 @@ function drawChartTimeData(d, chartTarget, infoTarget) {
 		const li = document.createElement('li');
 		li.innerText = `${k}: ${formatAsTime(sorted[k])}`;
 		li.classList.add(cleanPath(k));
+		li.addEventListener('mouseover', () => {
+			document.querySelector(`path.${k}`).classList.toggle('selected');
+		});
+		li.addEventListener('mouseout', () => {
+			document.querySelector(`path.${k}`).classList.toggle('selected');
+		});
+		li.addEventListener('click', () => {
+			document.querySelector(`select [value='${k}']`).selected = true;
+			setContext('project', k);
+		});
 		list.append(li);
 	}
 }
@@ -75,7 +85,7 @@ function renderHeatMap(d, target) {
 
 	for (const k of Object.keys(d)) {
 		const cell = document.querySelector(`${target} .date-${k}`);
-		cell.style.backgroundColor = 'green';
+		cell.style.backgroundColor = '#3DAC78';
 	}
 }
 
@@ -138,7 +148,10 @@ function sortByTime(d) {
 
 function setContext(tab, project) {
 	context.tab = tab;
-	context.project = project;
+	if (project) {
+		context.project = project;
+	}
+
 	updateView();
 }
 
@@ -156,6 +169,9 @@ function updateView() {
 		}
 
 		case 'project': {
+            if (!context.project) {
+                context.project = document.querySelector('select option').value;
+            }
 			getProjectStats();
 			document.querySelector('#project').style.display = 'block';
 			break;
