@@ -1,5 +1,10 @@
-svg path:hover {
-    filter: brightness(110%);
-    transform: scale(103%);
+svg path:hover, svg path.selected {
+    filter: brightness(120%);
+    transform: scale(101%);
+    cursor: pointer;
+}
+
+ol#entries li:hover {
+    font-weight: bold;
     cursor: pointer;
 }
