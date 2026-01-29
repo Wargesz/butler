@@ -37,8 +37,8 @@ function drawChartTimeData(d, chartTarget, infoTarget) {
 			document.querySelector(`path.${k}`).classList.toggle('selected');
 		});
 		li.addEventListener('click', () => {
-            openProjectTab(k);
-        });
+			openProjectTab(k);
+		});
 		list.append(li);
 	}
 }
