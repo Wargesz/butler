@@ -37,9 +37,8 @@ function drawChartTimeData(d, chartTarget, infoTarget) {
 			document.querySelector(`path.${k}`).classList.toggle('selected');
 		});
 		li.addEventListener('click', () => {
-			document.querySelector(`select [value='${k}']`).selected = true;
-			setContext('project', k);
-		});
+            openProjectTab(k);
+        });
 		list.append(li);
 	}
 }
@@ -87,6 +86,11 @@ function renderHeatMap(d, target) {
 		const cell = document.querySelector(`${target} .date-${k}`);
 		cell.style.backgroundColor = '#3DAC78';
 	}
+}
+
+function openProjectTab(project) {
+	document.querySelector(`select [value='${project}']`).selected = true;
+	setContext('project', project);
 }
 
 function renderTotalHeatMap(d) {
@@ -169,9 +173,8 @@ function updateView() {
 		}
 
 		case 'project': {
-            if (!context.project) {
-                context.project = document.querySelector('select option').value;
-            }
+			context.project ||= document.querySelector('select option').value;
+
 			getProjectStats();
 			document.querySelector('#project').style.display = 'block';
 			break;
