@@ -18,16 +18,17 @@ async function getStats() {
 }
 
 function loadTotalProjectData(d) {
-    drawChartTimeData(d.time, '#projects-svg', '#total #projects ol#entries');
-    drawChartTimeData(d.editor, '#editor-svg', '#total #editors ol#entries');
+	drawChartTimeData(d.time, '#projects-svg', '#total #projects ol#entries');
+	drawChartTimeData(d.editor, '#editor-svg', '#total #editors ol#entries');
 }
 
 function drawChartTimeData(d, chartTarget, infoTarget) {
-	drawPieChart(d, chartTarget);
+	const sorted = sortByTime(d);
+	drawPieChart(sorted, chartTarget);
 	const list = document.querySelector(infoTarget);
-	for (const k of Object.keys(d)) {
+	for (const k of Object.keys(sorted)) {
 		const li = document.createElement('li');
-		li.innerText = `${k}: ${formatAsTime(d[k])}`;
+		li.innerText = `${k}: ${formatAsTime(sorted[k])}`;
 		li.classList.add(cleanPath(k));
 		list.append(li);
 	}
@@ -130,6 +131,10 @@ document.querySelector('span#project select').addEventListener('change', e => {
 	const select = e.target;
 	setProject(select.value);
 });
+
+function sortByTime(d) {
+	return Object.fromEntries(Object.entries(d).sort((a, b) => (b[1] - a[1])));
+}
 
 function setContext(tab, project) {
 	context.tab = tab;
