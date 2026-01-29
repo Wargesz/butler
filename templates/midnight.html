@@ -9,21 +9,23 @@
     <body>
         <div id="tabs">
             <button onclick="setContext('total')" class="tab btn">Total</button>
-            <button onclick="setContext('project', Object.keys(context.data.time)[0])"class="tab btn">Project</button>
+            <button onclick="setContext('project')" class="tab btn">Project</button>
         </div>
         <span class="content" id="total">
             <table id="heatmap">
             </table>
             <div id="projects">
-                <svg viewBox="-152 -152 330 304" id="projects-svg" width="300" height="330"
-                                                                       xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="-152 -152 330 304" id="projects-svg" width="300"
+                                                                   height="320"
+                                                                   xmlns="http://www.w3.org/2000/svg">
                 </svg>
                 <ol id="entries" class="project">
                 </ol>
             </div>
             <div id="editors">
-                <svg viewBox="-152 -152 330 304" id="editor-svg" width="300" height="330"
-                                                                         xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="-152 -152 330 304" id="editor-svg" width="300"
+                                                                 height="320"
+                                                                 xmlns="http://www.w3.org/2000/svg">
                 </svg>
                 <ol id="entries" class="editor">
                 </ol>
