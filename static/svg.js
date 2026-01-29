@@ -17,11 +17,14 @@ function drawPieChart(values, target) {
 		const reverse = element - 0.5 < 0.25 || element - 0.5 > -0.25 ? '1' : '0';
 		const path = document.createElementNS(xmlnsString, 'path');
 		const dString = `M ${origo} L ${start} A ${size},${size} 0 ${largeArc} ${reverse} ${end} L ${origo} Z`;
+        const project = cleanPath(Object.keys(values)[i]);
 		path.setAttribute('d', dString);
 		path.setAttribute('fill', c);
-		path.classList.add(cleanPath(Object.keys(values)[i]));
+		path.classList.add(project);
 		path.style.opacity = '70%';
-		path.addEventListener('mouseover', () => {});
+		path.addEventListener('click', () => {
+            openProjectTab(project);
+        });
 		offset += element;
 		svgs.append(path);
 		i++;
