@@ -1,6 +1,9 @@
 getStats();
 hideAllViews();
 setContext('total');
+const topC = [61, 172, 120];
+const botC = [68, 68, 68];
+const thresholdC = 10;
 
 async function getStats() {
 	const r = await fetch('activity?tab=total');
@@ -18,11 +21,11 @@ async function getStats() {
 }
 
 function loadTotalProjectData(d) {
-	drawChartTimeData(d.time, '#projects-svg', '#total #projects ol#entries');
-	drawChartTimeData(d.editor, '#editor-svg', '#total #editors ol#entries');
+	drawChartTimeData(d.time, '#projects-svg', '#total #projects ol#entries', true);
+	drawChartTimeData(d.editor, '#editor-svg', '#total #editors ol#entries', false);
 }
 
-function drawChartTimeData(d, chartTarget, infoTarget) {
+function drawChartTimeData(d, chartTarget, infoTarget, redirect) {
 	const sorted = sortByTime(d);
 	drawPieChart(sorted, chartTarget);
 	const list = document.querySelector(infoTarget);
@@ -36,9 +39,12 @@ function drawChartTimeData(d, chartTarget, infoTarget) {
 		li.addEventListener('mouseout', () => {
 			document.querySelector(`path.${k}`).classList.toggle('selected');
 		});
-		li.addEventListener('click', () => {
-			openProjectTab(k);
-		});
+		if (redirect) {
+			li.addEventListener('click', () => {
+				openProjectTab(k);
+			});
+		}
+
 		list.append(li);
 	}
 }
@@ -84,7 +90,14 @@ function renderHeatMap(d, target) {
 
 	for (const k of Object.keys(d)) {
 		const cell = document.querySelector(`${target} .date-${k}`);
-		cell.style.backgroundColor = '#3DAC78';
+		const value = Math.min(d[k] / thresholdC, 1);
+		const c = [];
+		for (let i = 0; i < 3; i++) {
+			c.push(botC[i] + (topC[i] - botC[i]) * value);
+		}
+
+		cell.classList.add(`files-${d[k]}`);
+		cell.style.backgroundColor = `rgb(${c.join(',')})`;
 	}
 }
 
@@ -104,16 +117,48 @@ function renderProjectHeatMap(d) {
 function renderProjectTime(d) {
 	const list = document.querySelector('#project ol');
 	list.innerHTML = '';
-	for (const k of Object.keys(d)) {
+	files = Object.entries(d).sort((a, b) => a[0].split('/').length - b[0].split('/').length);
+	const depth = -1;
+	const tree = generateTree(files);
+	drawTree(tree, list, depth);
+}
+
+function drawTree(tree, parentElement, depth) {
+	depth++;
+	for (const k of Object.keys(tree)) {
 		const li = document.createElement('li');
-		li.innerText = `${k}: ${formatAsTime(d[k])}`;
-		li.classList.add(cleanPath(k));
-		list.append(li);
+		li.innerText = tree[k].time ? k + ' ' + formatAsTime(tree[k].time) : '📁 ' + k + '/';
+		li.style.marginLeft = depth + 'em';
+		parentElement.append(li);
+		if (tree[k].time) {
+			continue;
+		}
+
+		drawTree(tree[k], parentElement, depth);
 	}
+}
+
+function generateTree(d) {
+	const tree = {};
+	for (const [file, time] of d) {
+		const path = file.split('/');
+		let head = tree;
+		for (const p of path) {
+			head[p] ||= {};
+			head = head[p];
+		}
+
+		head.time = time;
+	}
+
+	return tree;
 }
 
 function formatAsTime(sec) {
 	sec = Number.parseInt(sec);
+    if (sec < 60) {
+        return sec + ' seconds';
+    }
 	return Math.floor(sec / 3600) > 0
 		? `${Math.floor(sec / 3600)} hours`
 		: `${Math.floor(sec / 60)} minutes`;
