@@ -15,7 +15,7 @@ async function getStats() {
 	const d = JSON.parse(await r.text());
 	context.data = d;
 	loadTotalProjectData(d);
-	renderTotalHeatMap(d.heatmap);
+	renderHeatMap(d.heatmap);
 	loadProjectSelector(d.time);
 	addPathListeners();
 }
@@ -67,13 +67,13 @@ async function getProjectStats() {
 
 	const d = JSON.parse(await r.text());
 	renderProjectTime(d.time);
-	renderProjectHeatMap(d.heatmap);
+	renderHeatMap(d.heatmap);
 }
 
-function renderHeatMap(d, target) {
+function renderHeatMap(d) {
 	const date = new Date();
 	date.setDate(date.getDate() - 364);
-	const table = document.querySelector(target);
+	const table = document.querySelector('table#heatmap');
 	table.innerHTML = '';
 	for (let i = 0; i < 52; i++) {
 		const row = document.createElement('tr');
@@ -89,7 +89,7 @@ function renderHeatMap(d, target) {
 	}
 
 	for (const k of Object.keys(d)) {
-		const cell = document.querySelector(`${target} .date-${k}`);
+		const cell = document.querySelector(`table#heatmap .date-${k}`);
 		const value = Math.min(d[k] / thresholdC, 1);
 		const c = [];
 		for (let i = 0; i < 3; i++) {
@@ -104,14 +104,6 @@ function renderHeatMap(d, target) {
 function openProjectTab(project) {
 	document.querySelector(`select [value='${project}']`).selected = true;
 	setContext('project', project);
-}
-
-function renderTotalHeatMap(d) {
-	renderHeatMap(d, '#total #heatmap');
-}
-
-function renderProjectHeatMap(d) {
-	renderHeatMap(d, '#project #heatmap');
 }
 
 function renderProjectTime(d) {
@@ -156,9 +148,10 @@ function generateTree(d) {
 
 function formatAsTime(sec) {
 	sec = Number.parseInt(sec);
-    if (sec < 60) {
-        return sec + ' seconds';
-    }
+	if (sec < 60) {
+		return sec + ' seconds';
+	}
+
 	return Math.floor(sec / 3600) > 0
 		? `${Math.floor(sec / 3600)} hours`
 		: `${Math.floor(sec / 60)} minutes`;
