@@ -30,13 +30,18 @@ body {
     align-items: center;
 }
 
+hr {
+    margin: 1em;
+    color: var(--primary-green);
+}
+
 #tabs {
     .btn {
         display: block;
         margin: 0.5em;
         width: 100%;
     }
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 0%;
 }
@@ -45,7 +50,8 @@ body {
     background-color: var(--secondary-bg);
     color: white;
     padding: 2em;
-    height: auto;
+    border: thin solid var(--primary-green);
+    border-radius: 0.5em;
 }
 
 .btn {
@@ -62,11 +68,27 @@ body {
 }
 
 #project ol {
+    li {
+        display: flex;
+        span {
+            margin: 0.1em;
+            width: 100%;
+            display: inline-block;
+        }
+    }
     list-style-type: none;
-    overflow: auto;
 }
 
 table#heatmap {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-inline: auto;
+    width: fit-content;
+    background-color: #222;
+    padding: 0.5em;
+    border-radius: 0.5em;
     td {
         border-radius: 0.2em;
         background-color: #444;
@@ -74,11 +96,14 @@ table#heatmap {
         height: 0.9em;
         margin: 0.2em;
     }
-    position: absolute;
-    right: 0;
-    margin-inline: auto;
-    width: fit-content;
-    background-color: #222;
-    padding: 0.5em;
+}
+
+select, option {
+    border: thin solid var(--primary-green);
     border-radius: 0.5em;
+    padding: 0.4em;
+    background-color: var(--secondary-bg);
+    color: white;
+    margin: 1em;
+    display: flex;
 }
