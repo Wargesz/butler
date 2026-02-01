@@ -12,8 +12,6 @@
             <button onclick="setContext('project')" class="tab btn">Project</button>
         </div>
         <span class="content" id="total">
-            <table id="heatmap">
-            </table>
             <div id="projects">
                 <svg viewBox="-152 -152 330 304" id="projects-svg" width="300"
                                                                    height="320"
@@ -34,11 +32,11 @@
         <span class="content" id="project">
             <select id="project-view-select">
             </select>
-            <table id="heatmap">
-            </table>
             <ol id="time">
             </ol>
         </span>
+        <table id="heatmap">
+        </table>
     </body>
     <script>
         const context = {
