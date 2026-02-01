@@ -5,6 +5,6 @@ svg path:hover, svg path.selected {
 }
 
 ol#entries li:hover {
-    font-weight: bold;
+    text-shadow: 0px 0px 1px white;
     cursor: pointer;
 }
