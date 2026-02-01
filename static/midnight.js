@@ -1,9 +1,10 @@
-getStats();
-hideAllViews();
-setContext('total');
 const topC = [61, 172, 120];
 const botC = [68, 68, 68];
 const thresholdC = 10;
+hideAllViews();
+getStats().then(() => {
+	setContext('total');
+});
 
 async function getStats() {
 	const r = await fetch('activity?tab=total');
@@ -119,7 +120,17 @@ function drawTree(tree, parentElement, depth) {
 	depth++;
 	for (const k of Object.keys(tree)) {
 		const li = document.createElement('li');
-		li.innerText = tree[k].time ? k + ' ' + formatAsTime(tree[k].time) : '📁 ' + k + '/';
+        if (tree[k].time) {
+            let span = document.createElement('span');
+            span.innerText = k;
+            li.append(span);
+            span = document.createElement('span');
+            span.style.textAlign = 'right';
+            span.innerText = formatAsTime(tree[k].time);
+            li.append(span);
+        } else {
+            li.innerText = '📁 ' + k + '/';
+        }
 		li.style.marginLeft = depth + 'em';
 		parentElement.append(li);
 		if (tree[k].time) {
@@ -170,11 +181,11 @@ function addPathListeners() {
 	for (const element of document.querySelectorAll('path')) {
 		element.addEventListener('mouseover', e => {
 			document.querySelector(`li.${e.target.classList[0]}`).style
-				.fontWeight = 'bold';
+				.textShadow = '0px 0px 1px white';
 		});
 		element.addEventListener('mouseleave', e => {
 			document.querySelector(`li.${e.target.classList[0]}`).style
-				.fontWeight = '';
+				.textShadow = '';
 		});
 	}
 }
@@ -206,6 +217,7 @@ function updateView() {
 	hideAllViews();
 	switch (context.tab) {
 		case 'total': {
+			renderHeatMap(context.data.heatmap);
 			document.querySelector('#total').style.display = 'block';
 			break;
 		}
