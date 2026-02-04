@@ -30,7 +30,7 @@ for (const element of document.querySelectorAll('button.close')) {
 	});
 }
 
-document.querySelector('#upload').addEventListener('click', async e => {
+document.querySelector('#upload').addEventListener('click', () => {
 	clearActiveFile();
 	renderPaths('upload-path');
 	updateView('upload');
@@ -76,7 +76,7 @@ document.querySelector('#files').addEventListener('change', e => {
 	}
 });
 
-document.querySelector('#edit-content').addEventListener('click', e => {
+document.querySelector('#edit-content').addEventListener('click', () => {
 	const content = document.querySelector('#viewer-contents');
 	updateView('edit');
 	context.content = content.value;
@@ -84,7 +84,7 @@ document.querySelector('#edit-content').addEventListener('click', e => {
 	content.focus();
 });
 
-document.querySelector('#create').addEventListener('click', e => {
+document.querySelector('#create').addEventListener('click', () => {
 	document.querySelector('#new-file #toolbar input').value = '';
 	document.querySelector('#new-file textarea').value = '';
 	renderPaths('new-file-path');
@@ -105,6 +105,8 @@ document.querySelector('#save-new-file').addEventListener('click', async () => {
 		}),
 	});
 	const text = await r.text();
+	refreshVault(scope.toLowerCase());
+	updateView('browse');
 	notify(text);
 });
 
@@ -135,12 +137,13 @@ document.querySelector('#delete-file').addEventListener('click', async () => {
 	});
 	const text = await r.text();
 	notify(text);
+	refreshVault(context.scope);
 	updateView('browse');
 });
 
 function registerClickEvents() {
 	for (const e of document.querySelectorAll('.file')) {
-		e.addEventListener('click', async () => {
+		e.onclick = async () => {
 			clearActiveFile();
 			e.classList.add('active-file');
 
@@ -171,11 +174,11 @@ function registerClickEvents() {
 			}
 
 			updateView('view');
-		});
+		}
 	}
 
 	for (const element of document.querySelectorAll('a.pebble')) {
-		element.addEventListener('click', async e => {
+		element.onclick = async e => {
 			const path = getPathOfElement(e.target);
 			const r = await fetch('file?' + new URLSearchParams({
 				path: `${path}/README.pb`,
@@ -185,7 +188,7 @@ function registerClickEvents() {
 			clearActiveFile();
 			renderPebble(res.content);
 			updateView('pebble');
-		});
+		}
 	}
 }
 
@@ -262,4 +265,33 @@ function notify(message) {
 	setTimeout(() => {
 		n.hidden = true;
 	}, 1650);
+}
+
+async function refreshVault(vault) {
+	if (vault != 'public' && vault != 'private') {
+		return null;
+	}
+
+	const vaultStates = getVaultStates(vault);
+	const r = await fetch(vault);
+	document.querySelector(`details.vault.${vault}`).outerHTML = await r.text();
+	const vaultElement = document.querySelector(`details.vault.${vault}`);
+	vaultElement.open = vaultStates.state;
+	registerClickEvents();
+	indentNestedFolders();
+	for (const user of vaultStates.user) {
+		vaultElement.querySelector(`details.user-${user}`).open = true;
+	}
+}
+
+function getVaultStates(vault) {
+	const states = {};
+	states.user = [];
+	states.state = document.querySelector(`details.vault.${vault}`).open;
+	for (const e of document.querySelectorAll(`details.vault.${vault} details.user[open]`)) {
+		states.user.push(e.querySelector('span').innerText);
+	}
+
+	console.log(states);
+	return states;
 }
