@@ -30,6 +30,17 @@ body {
     align-items: center;
 }
 
+a#home {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0.5em;
+    width: auto;
+    height: auto;
+    text-align: center;
+    font-size: 1.4em;
+}
+
 hr {
     margin: 1em;
     color: var(--primary-green);
