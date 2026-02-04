@@ -9,68 +9,8 @@
     <body>
         <aside>
             <h1>Vaults</h1>
-            <details class="vault public" open>
-                <summary>Public</summary>
-                {% if public|length %}
-                {% for entry in public %}
-                <details class="user">
-                    <summary>
-                        <img src="{{url_for('static', filename='user.png')}}">
-                        <span>{{ entry.username }}</span>
-                    </summary>
-                    {% for content in entry.content %}
-                    <div class="folder {% if content[0]|nested %} nested nested-{{content[0]|nested}} {% endif %}">
-                        <div class="folder-name">
-                            {{ content[0]|trailing }}
-                            {% if "README.pb" in content[1] %}
-                            <a class="pebble path-user-{{entry.username}}{{content[0]}}">[doc]</a>
-                            {% endif%}
-                        </div>
-                        <div class="files">
-                            {% for file in content[1] %}
-                            <li class="file path-user-{{entry.username}}{{content[0]}}">{{ file }}</li>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </details>
-                {% endfor %}
-                {% else %}
-                <div class="empty-vault">
-                    No files.
-                </div>
-                {% endif %}
-            </details>
-            <details class="vault private" open>
-                <summary>Private</summary>
-                {% if private.content|length %}
-                <details class="user">
-                    <summary>
-                        <img src="{{url_for('static', filename='user.png')}}">
-                        <span>{{private.username }}</span>
-                    </summary>
-                    {% for content in private.content %}
-                    <div class="folder {% if content[0]|nested %} nested nested-{{content[0]|nested}} {% endif %}">
-                        <div class="folder-name">
-                            {{ content[0]|trailing }}
-                            {% if "README.pb" in content[1] %}
-                            <a class="pebble private path-user-{{private.username}}{{content[0]}}">[doc]</a>
-                            {% endif%}
-                        </div>
-                        <div class="files">
-                            {% for file in content[1] %}
-                            <li class="file private path-user-{{private.username}}{{content[0]}}">{{ file }}</li>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </details>
-                {% else %}
-                <div class="empty-vault">
-                    No files.
-                </div>
-                {% endif %}
-            </details>
+            {% include 'public_vault.html' %}
+            {% include 'private_vault.html' %}
             <div id="actions">
                 <button id="upload" class="btn">Upload</button>
                 <button id="create" class="btn">New file</button>
