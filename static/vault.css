@@ -112,8 +112,11 @@ details > summary::-webkit-details-marker {
     margin-left: 1em;
 }
 
-.folder.nested > .folder-name::before {
-    content: '/';
+.folder.nested > .folder-name {
+    margin-left: -1em;
+    &::before {
+        content: '📁';
+    }
 }
 
 #actions {
