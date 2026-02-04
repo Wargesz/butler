@@ -2,7 +2,7 @@
                 <summary>Public</summary>
                 {% if public|length %}
                 {% for entry in public %}
-                <details class="user">
+                <details class="user user-{{entry.username}}">
                     <summary>
                         <img src="{{url_for('static', filename='user.png')}}">
                         <span>{{ entry.username }}</span>

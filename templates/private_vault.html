@@ -1,7 +1,7 @@
             <details class="vault private" open>
                 <summary>Private</summary>
                 {% if private.content|length %}
-                <details class="user">
+                <details class="user user-{{private.username}}">
                     <summary>
                         <img src="{{url_for('static', filename='user.png')}}">
                         <span>{{private.username }}</span>
