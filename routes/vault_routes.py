@@ -15,6 +15,20 @@ def vault():
     return render_template('vault.html', public=public, private=private)
 
 
+@vault_bp.route('/public')
+@auth
+def publicVault():
+    public, _ = buildVaults(session.get('user'))
+    return render_template('public_vault.html', public=public)
+
+
+@vault_bp.route('/private')
+@auth
+def privateVault():
+    _, private = buildVaults(session.get('user'))
+    return render_template('private_vault.html', private=private)
+
+
 @vault_bp.route('/file', methods=['GET'])
 @auth
 def getFile():
