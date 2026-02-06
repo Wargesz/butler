@@ -154,7 +154,7 @@ def upload():
 @auth
 def paths():
     if not request.accept_mimetypes.accept_json:
-        return 'only application/json is allowed', 415
+        return 'only application/json is allowed', 400
     return dumps(getAllPathsOfUser(session.get('user')))
 
 
