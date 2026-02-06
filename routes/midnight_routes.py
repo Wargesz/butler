@@ -37,7 +37,7 @@ def activity():
     project = request.args.get('project')
     if tab == 'project' and project:
         return getProjectValues(user, project)
-    return dumps({'err': 'invalid tab'}), 400
+    return 'invalid tab', 400
 
 
 def getTotalValues(user):
