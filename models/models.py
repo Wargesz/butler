@@ -23,6 +23,7 @@ class User(Base, CRUDMixin):
     username = Column(Text, unique=True, nullable=False)
     password = Column(Text, nullable=False)
     api_key = Column(Text, unique=True, nullable=False)
+    project_folder = Column(Text, default='')
     midnights = relationship('Midnight')
 
     def __init__(self, username, password, api_key):
@@ -31,7 +32,7 @@ class User(Base, CRUDMixin):
         self.api_key = api_key
 
     def __repr__(self):
-        return f'<User {self.username!r}>'
+        return f'<User {self.username!r}>, {self.project_folder}'
 
 
 class Midnight(Base, CRUDMixin):

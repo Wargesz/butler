@@ -27,7 +27,7 @@ body {
     color: var(--secondary-bg);
 }
 
-.vault, .midnight {
+a, .btn {
     border: thin solid var(--primary-green);
     background-color: var(--primary-green);
     display: inline-block;
@@ -36,12 +36,60 @@ body {
     font-weight: bold;
     border-radius: 0.5em;
     text-align: center;
+    color: white;
 }
 
-.vault:hover, .midnight:hover {
+a:hover, .btn:hover {
     border: thin solid white;
 }
 
 .module-selector {
     background-color: var(--secondary-bg);
+    padding: 2em;
+    border-radius: 0.5em;
+}
+
+#profile {
+    label {
+        display: block;
+    }
+    input {
+        color: white;
+        border: none;
+        border-bottom: thin solid var(--primary-green);
+        background-color: #333;
+        padding: 0.5em;
+        border-radius: 0.5em;
+        text-align: center;
+    }
+    border-radius: 0.5em;
+    position: absolute;
+    right: 0.3em;
+    top: 2.5em;
+    background: var(--secondary-bg);
+    color: white;
+    padding: 0.3em;
+    margin: 0.5em;
+}
+
+#open-profile {
+    position: absolute;
+    color: white;
+    right: 0.5em;
+    top: 0.5em;
+    padding: 0.3em;
+    margin: 0.5em;
+    z-index: 10;
+}
+
+#notification {
+    background-color: var(--primary-green);
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 1.5em;
+    padding: 0.5em;
+    border-radius: 0.4em;
+    background-color: #3C4142;
 }

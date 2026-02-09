@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --primary-green: #3DAC78;
+    --primary-bg: #121314;
+    --secondary-bg: #222324;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+body {
+    span div {
+        display: flex;
+    }
+    font-family: Poppins, Helvetica, serif;
+    background-color: var(--primary-bg);
+    color: white;
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+}
+
+a#home {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0.5em;
+    width: auto;
+    height: auto;
+    text-align: center;
+    font-size: 1.4em;
+}
+
+hr {
+    margin: 1em;
+    color: var(--primary-green);
+}
+
+#tabs {
+    .btn {
+        display: block;
+        margin: 0.5em;
+        width: 100%;
+    }
+    position: fixed;
+    top: 50%;
+    left: 0%;
+}
+
+.content {
+    background-color: var(--secondary-bg);
+    color: white;
+    padding: 2em;
+    border: thin solid var(--primary-green);
+    border-radius: 0.5em;
+}
+
+.btn {
+    background-color: var(--primary-green);
+    color: white;
+    border: thin solid var(--primary-green);
+    border-radius: 0.5em;
+    padding: 0.2em;
+}
+
+.btn:hover {
+    cursor: pointer;
+    border: thin solid white;
+}
+
+#project ol {
+    li {
+        display: flex;
+        span {
+            margin: 0.1em;
+            width: 100%;
+            display: inline-block;
+        }
+    }
+    list-style-type: none;
+}
+
+table#heatmap {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-inline: auto;
+    width: fit-content;
+    background-color: #222;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    td {
+        border-radius: 0.2em;
+        background-color: #444;
+        width: 0.9em;
+        height: 0.9em;
+        margin: 0.2em;
+    }
+}
+
+select, option {
+    border: thin solid var(--primary-green);
+    border-radius: 0.5em;
+    padding: 0.4em;
+    background-color: var(--secondary-bg);
+    color: white;
+    margin: 1em;
+    display: flex;
+}
