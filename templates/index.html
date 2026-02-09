@@ -7,9 +7,23 @@
               href="{{url_for('static',filename='index.css')}}">
     </head>
     <body>
+        <button id="open-profile" class="btn">Profile</button>
+        <div id="profile" style="display: none;">
+            <label for="home-folder">Projects folder</label>
+            <input id="home-folder" readonly original-value="{{projects_folder}}" value="{{projects_folder}}"
+                                                                                  placeholder="/home/user/myfolder/">
+            <button onclick="changeProjectFolder()" style="width: 2.5em;"class="btn" title="Edit project folder">✏️</button>
+            <button onclick="saveProjectFolder()"style="width: 2.5em;"class="btn" title="Save changes">💾</button>
+            <label for="api-key">API key</label>
+            <input id="api-key" value="click to reveal" readonly data-value="{{api_key}}" readonly>
+            <button onclick="generateNewKey()" style="width: 5em;" class="btn" title="Generate new key">🗘</button>
+        </div>
         <div class="module-selector">
             <a href="vault" class="vault">Vault</a>
             <a href="midnight" class="midnight">Midnight</a>
         </div>
+        <div hidden id="notification"></div>
+        <script src="{{url_for('static',filename='profile.js')}}">
+        </script>
     </body>
 </html>
