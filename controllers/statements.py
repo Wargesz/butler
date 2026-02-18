@@ -11,8 +11,7 @@ SELECT SUBSTR(REPLACE(edited_file, :p, ""), 0,
         FROM midnight
         WHERE user_id == :i
         GROUP BY 1
-        ORDER BY 2 DESC
-        LIMIT 10;
+        ORDER BY 2 DESC;
 """
 
 stmt['GET_PROJECT_ACTIVITY'] = """
