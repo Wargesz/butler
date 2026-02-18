@@ -73,7 +73,7 @@ async function getProjectStats() {
 
 function renderHeatMap(d) {
 	const date = new Date();
-	date.setDate(date.getDate() - 364);
+	date.setDate(date.getDate() - 363);
 	const table = document.querySelector('table#heatmap');
 	table.innerHTML = '';
 	for (let i = 0; i < 52; i++) {
