@@ -22,15 +22,15 @@ async function getStats() {
 }
 
 function loadTotalProjectData(d) {
-	drawChartTimeData(d.time, '#projects-svg', '#total #projects ol#entries', true);
-	drawChartTimeData(d.editor, '#editor-svg', '#total #editors ol#entries', false);
+	drawChartTimeData(d.time, '#projects-svg', '#total #projects ol#entries', true, 10);
+	drawChartTimeData(d.editor, '#editor-svg', '#total #editors ol#entries', false, 10);
 }
 
-function drawChartTimeData(d, chartTarget, infoTarget, redirect) {
+function drawChartTimeData(d, chartTarget, infoTarget, redirect, limit) {
 	const sorted = sortByTime(d);
 	drawPieChart(sorted, chartTarget);
 	const list = document.querySelector(infoTarget);
-	for (const k of Object.keys(sorted)) {
+	for (const k of Object.keys(sorted).slice(0, limit || Object.keys(sorted).length)) {
 		const li = document.createElement('li');
 		li.innerText = `${k}: ${formatAsTime(sorted[k])}`;
 		li.classList.add(cleanPath(k));
@@ -73,7 +73,7 @@ async function getProjectStats() {
 
 function renderHeatMap(d) {
 	const date = new Date();
-	date.setDate(date.getDate() - 364);
+	date.setDate(date.getDate() - 363);
 	const table = document.querySelector('table#heatmap');
 	table.innerHTML = '';
 	for (let i = 0; i < 52; i++) {
@@ -120,17 +120,18 @@ function drawTree(tree, parentElement, depth) {
 	depth++;
 	for (const k of Object.keys(tree)) {
 		const li = document.createElement('li');
-        if (tree[k].time) {
-            let span = document.createElement('span');
-            span.innerText = k;
-            li.append(span);
-            span = document.createElement('span');
-            span.style.textAlign = 'right';
-            span.innerText = formatAsTime(tree[k].time);
-            li.append(span);
-        } else {
-            li.innerText = '📁 ' + k + '/';
-        }
+		if (tree[k].time) {
+			let span = document.createElement('span');
+			span.innerText = k;
+			li.append(span);
+			span = document.createElement('span');
+			span.style.textAlign = 'right';
+			span.innerText = formatAsTime(tree[k].time);
+			li.append(span);
+		} else {
+			li.innerText = '📁 ' + k + '/';
+		}
+
 		li.style.marginLeft = depth + 'em';
 		parentElement.append(li);
 		if (tree[k].time) {
