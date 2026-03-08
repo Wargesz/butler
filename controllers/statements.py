@@ -10,6 +10,7 @@ SELECT SUBSTR(REPLACE(edited_file, :p, ""), 0,
         SUM(seconds) AS total_time
         FROM midnight
         WHERE user_id == :i
+        AND INSTR(edited_file, :p) == 1
         GROUP BY 1
         ORDER BY 2 DESC;
 """
