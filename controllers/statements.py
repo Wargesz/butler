@@ -31,10 +31,10 @@ SELECT date, COUNT(edited_file) FROM  (
     SELECT DISTINCT DATE(start_date) as date, edited_file
     FROM midnight
     WHERE user_id == :i
+    AND start_date > DATE("now", "-1 year")
 )
 GROUP BY 1
-ORDER BY 1 DESC
-LIMIT 364;
+ORDER BY 1 DESC;
 """
 
 stmt['GET_PROJECT_HEATMAP_DATA'] = """
@@ -45,10 +45,10 @@ WHERE user_id IS :i
 AND INSTR(edited_file,
     CONCAT(:f, :p, "/")
 )
+AND start_date > DATE("now", "-1 year")
 )
 GROUP BY 1
-ORDER BY 1 DESC
-LIMIT 364;
+ORDER BY 1 DESC;
 """
 
 stmt['GET_EDITOR_DATA'] = """
