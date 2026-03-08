@@ -1,6 +1,6 @@
 from flask import (
         Blueprint, render_template, request, redirect, session,
-        send_from_directory)
+        send_from_directory, url_for)
 from dotenv import dotenv_values
 from random import choice
 from controllers.db import DB
@@ -76,7 +76,7 @@ def post_login():
         return render_template('login.html', error_message='invalid username')
     if bcrypt.checkpw(password.encode('utf-8'),
                       user.password.encode('utf-8')):
-        res = redirect('/')
+        res = redirect(url_for('root.root'))
         cookie, exp = signCookie(user)
         res.set_cookie('Authorize', cookie, expires=exp, httponly=True)
         return res
@@ -91,6 +91,8 @@ def get_register():
 
 @root_bp.route('/register', methods=['POST'])
 def post_register():
+    return render_template('register.html', error_message='registration is \
+            currently disabled')
     username = request.form['username']
     if username == "":
         return render_template('register.html', error_message='no username \
@@ -108,7 +110,7 @@ def post_register():
     DB.add(user)
     DB.commit()
     createContentDir(user)
-    res = redirect('/')
+    res = redirect(url_for('root.root'))
     cookie, exp = signCookie(user)
     res.set_cookie('Authorize', cookie, expires=exp, httponly=True)
     return res
