@@ -28,7 +28,12 @@ function loadTotalProjectData(d) {
 
 function drawChartTimeData(d, chartTarget, infoTarget, redirect, limit) {
 	const sorted = sortByTime(d);
-	drawPieChart(sorted, chartTarget);
+    const keys = Object.keys(sorted).slice(0, 10);
+    const values = {};
+    for (const k of keys) {
+        values[k] = sorted[k];
+    }
+	drawPieChart(values, chartTarget);
 	const list = document.querySelector(infoTarget);
 	for (const k of Object.keys(sorted).slice(0, limit || Object.keys(sorted).length)) {
 		const li = document.createElement('li');
