@@ -86,6 +86,9 @@ function renderHeatMap(d) {
 	let month = date.getMonth();
 	for (let i = 0; i < 52; i++) {
 		const row = document.createElement('tr');
+		const weeklyAvg = document.createElement('th');
+		weeklyAvg.innerText = '';
+		row.append(weeklyAvg);
 		for (let o = 0; o < 7; o++) {
 			const cell = document.createElement('td');
 			cell.title = date.toDateString();
@@ -108,9 +111,9 @@ function renderHeatMap(d) {
 		table.append(row);
 	}
 
-	for (const k of Object.keys(d)) {
+	for (const k of Object.keys(d.days)) {
 		const cell = document.querySelector(`table#heatmap .date-${k}`);
-		const value = Math.min(d[k] / thresholdC, 1);
+		const value = Math.min(d.days[k] / thresholdC, 1);
 		const c = [];
 		for (let i = 0; i < 3; i++) {
 			c.push(botC[i] + (topC[i] - botC[i]) * value);
@@ -118,6 +121,11 @@ function renderHeatMap(d) {
 
 		cell.classList.add(`files-${d[k]}`);
 		cell.style.backgroundColor = `rgb(${c.join(',')})`;
+	}
+
+	for (const k of Object.keys(d.weeks)) {
+		const rowHeader = document.querySelector(`.date-${k}`).parentElement.querySelector('th');
+		rowHeader.innerText = formatAsClock(d.weeks[k]);
 	}
 }
 
@@ -190,6 +198,13 @@ function formatAsTime(sec) {
 	return Math.floor(sec / 3600) > 0
 		? `${Math.floor(sec / 3600)} hours`
 		: `${Math.floor(sec / 60)} minutes`;
+}
+
+function formatAsClock(sec) {
+	const h = Math.floor(sec / 60 / 60);
+	const m = Math.floor(sec / 60 % 60);
+	const s = Math.floor(sec % 60);
+	return `${leadingZero(h)}:${leadingZero(m)}:${leadingZero(s)}`;
 }
 
 function leadingZero(n) {
