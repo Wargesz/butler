@@ -38,7 +38,7 @@ ORDER BY 1 DESC;
 """
 
 stmt['GET_PROJECT_HEATMAP_DATA'] = """
-Select DATE, COUNT(edited_file) AS files_count FROM (
+SELECT DATE, COUNT(edited_file) AS files_count FROM (
 SELECT DISTINCT DATE(start_date) AS date, edited_file
 FROM midnight
 WHERE user_id IS :i
@@ -57,6 +57,26 @@ FROM midnight
 WHERE user_id == :i
 GROUP BY 1
 ORDER BY 1 DESC;
+"""
+
+stmt['GET_TOTAL_HEATMAP_WEEKLY_DATA'] = """
+SELECT strftime('%Y-%m-%d', start_date) AS first_log_of_the_week,
+SUM(seconds) AS seconds
+FROM midnight
+WHERE user_id == :i
+AND instr(edited_file, :p)
+GROUP BY strftime('%Y-%W', start_date);
+"""
+
+stmt['GET_PROJECT_WEEKLY_DATA'] = """
+SELECT strftime('%Y-%m-%d', start_date) AS first_log_of_the_week,
+SUM(seconds) AS seconds
+FROM midnight
+WHERE user_id == :i
+AND INSTR(edited_file,
+    CONCAT(:f, :p, "/")
+)
+GROUP BY strftime('%Y-%W', start_date);
 """
 
 
@@ -88,6 +108,18 @@ def getHeatMap(username, projectname=''):
 def getEditorData(username):
     user = getUserFromUsername(username)
     return eval(stmt['GET_EDITOR_DATA'], {'i': user.id})
+
+
+def getUserWeeklyActivity(username):
+    user = getUserFromUsername(username)
+    return eval(stmt['GET_TOTAL_HEATMAP_WEEKLY_DATA'],
+                {'i': user.id, 'p': user.project_folder})
+
+
+def getProjectWeeklyActivity(username, projectname):
+    user = getUserFromUsername(username)
+    return eval(stmt['GET_PROJECT_WEEKLY_DATA'],
+                {'i': user.id, 'f': user.project_folder, 'p': projectname})
 
 
 def getUserFromUsername(username) -> User:
