@@ -28,11 +28,12 @@ function loadTotalProjectData(d) {
 
 function drawChartTimeData(d, chartTarget, infoTarget, redirect, limit) {
 	const sorted = sortByTime(d);
-    const keys = Object.keys(sorted).slice(0, 10);
-    const values = {};
-    for (const k of keys) {
-        values[k] = sorted[k];
-    }
+	const keys = Object.keys(sorted).slice(0, 10);
+	const values = {};
+	for (const k of keys) {
+		values[k] = sorted[k];
+	}
+
 	drawPieChart(values, chartTarget);
 	const list = document.querySelector(infoTarget);
 	for (const k of Object.keys(sorted).slice(0, limit || Object.keys(sorted).length)) {
@@ -78,17 +79,30 @@ async function getProjectStats() {
 
 function renderHeatMap(d) {
 	const date = new Date();
-	date.setDate(date.getDate() - 363);
+	date.setDate(date.getDate() - date.getDay() + 1);
+	date.setDate(date.getDate() - 51 * 7);
 	const table = document.querySelector('table#heatmap');
 	table.innerHTML = '';
+	let month = date.getMonth();
 	for (let i = 0; i < 52; i++) {
 		const row = document.createElement('tr');
 		for (let o = 0; o < 7; o++) {
 			const cell = document.createElement('td');
 			cell.title = date.toDateString();
 			cell.classList.add(`date-${date.getFullYear()}-${leadingZero(date.getMonth() + 1)}-${leadingZero(date.getDate())}`);
+			if (date.getMonth() % 2) {
+				cell.classList.add('alt-month');
+			}
+
 			date.setDate(date.getDate() + 1);
 			row.append(cell);
+		}
+
+		if (month != getMonthFromDateClass(row.lastChild)) {
+			month = getMonthFromDateClass(row.lastChild);
+			const header = document.createElement('th');
+			header.innerText = row.lastChild.title.split(' ')[1];
+			row.append(header);
 		}
 
 		table.append(row);
@@ -105,6 +119,10 @@ function renderHeatMap(d) {
 		cell.classList.add(`files-${d[k]}`);
 		cell.style.backgroundColor = `rgb(${c.join(',')})`;
 	}
+}
+
+function getMonthFromDateClass(e) {
+	return Number.parseInt(e.className.split('-')[2]);
 }
 
 function openProjectTab(project) {
