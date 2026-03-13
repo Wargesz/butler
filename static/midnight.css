@@ -101,11 +101,19 @@ table#heatmap {
     padding: 0.5em;
     border-radius: 0.5em;
     td {
+        box-sizing: border-box;
+        border: thin;
         border-radius: 0.2em;
         background-color: #444;
-        width: 0.9em;
-        height: 0.9em;
-        margin: 0.2em;
+        width: 14px;
+        height: 14px;
+    }
+    td.alt-month {
+        border: thin solid peru;
+    }
+    th {
+        font-weight: unset;
+        font-size: x-small;
     }
 }
 
