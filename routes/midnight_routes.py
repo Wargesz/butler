@@ -1,9 +1,10 @@
 from flask import Blueprint, request, render_template, session
 from models.models import Midnight, User
 from controllers.statements import (getUserActivity, getProjectActivity,
-                                    getHeatMap, getUserHeatMap, getEditorData)
+                                    getHeatMap, getUserHeatMap, getEditorData,
+                                    getUserWeeklyActivity,
+                                    getProjectWeeklyActivity)
 from middleware.auth import auth
-from json import dumps
 
 midnight_bp = Blueprint('midnight', __name__)
 
@@ -42,7 +43,7 @@ def activity():
 
 def getTotalValues(user):
     d = {}
-    d['heatmap'] = {}
+    d['heatmap'] = {'days': {}, 'weeks': {}}
     d['time'] = {}
     d['editor'] = {}
     results = getUserActivity(user)
@@ -50,7 +51,10 @@ def getTotalValues(user):
         d['time'][res[0]] = res[1]
     results = getUserHeatMap(user)
     for res in results:
-        d['heatmap'][res[0]] = res[1]
+        d['heatmap']['days'][res[0]] = res[1]
+    results = getUserWeeklyActivity(user)
+    for res in results:
+        d['heatmap']['weeks'][res[0]] = res[1]
     results = getEditorData(user)
     for res in results:
         d['editor'][res[0]] = res[1]
@@ -59,11 +63,14 @@ def getTotalValues(user):
 
 def getProjectValues(user, project):
     d = {}
-    d['heatmap'] = {}
+    d['heatmap'] = {'days': {}, 'weeks': {}}
     d['time'] = {}
     results = getHeatMap(user, project)
     for res in results:
-        d['heatmap'][res[0]] = res[1]
+        d['heatmap']['days'][res[0]] = res[1]
+    results = getProjectWeeklyActivity(user, project)
+    for res in results:
+        d['heatmap']['weeks'][res[0]] = res[1]
     results = getProjectActivity(user, project)
     for res in results:
         d['time'][res[0]] = res[1]
