@@ -92,11 +92,16 @@ function renderHeatMap(d) {
 		for (let o = 0; o < 7; o++) {
 			const cell = document.createElement('td');
 			cell.title = date.toDateString();
-			cell.classList.add(`date-${date.getFullYear()}-${leadingZero(date.getMonth() + 1)}-${leadingZero(date.getDate())}`);
+			const dateString = `${date.getFullYear()}-${leadingZero(date.getMonth() + 1)}-${leadingZero(date.getDate())}`;
+			cell.classList.add(`date-${dateString}`);
 			if (date.getMonth() % 2) {
 				cell.classList.add('alt-month');
 			}
 
+			cell.addEventListener('click', () => {
+				updateCalendar(dateString, dateString);
+				setContext('calendar');
+			});
 			date.setDate(date.getDate() + 1);
 			row.append(cell);
 		}
@@ -105,7 +110,16 @@ function renderHeatMap(d) {
 			month = getMonthFromDateClass(row.lastChild);
 			const header = document.createElement('th');
 			header.innerText = row.lastChild.title.split(' ')[1];
+			const lastCell = row.lastChild;
 			row.append(header);
+			const cellDate = lastCell.className.split('-');
+			const scopeYear = cellDate[1];
+			const scopeMonth = cellDate[2];
+			const lastDay = new Date(scopeYear, scopeMonth, 1);
+			header.addEventListener('click', () => {
+				updateCalendar(`${scopeYear}-${scopeMonth}-01`, lastDay.toISOString().split('T')[0]);
+				setContext('calendar');
+			});
 		}
 
 		table.append(row);
@@ -125,6 +139,15 @@ function renderHeatMap(d) {
 
 	for (const k of Object.keys(d.weeks)) {
 		const rowHeader = document.querySelector(`.date-${k}`).parentElement.querySelector('th');
+		const monday = rowHeader.nextSibling.className.split(' ')[0].split('date-')[1];
+		const sunday = (rowHeader.parentElement.lastChild.nodeName == 'TH'
+			? rowHeader.parentElement.lastChild.previousSibling
+			: rowHeader.parentElement.lastChild).className.split(' ')[0].split('date-')[1];
+		date.setDate(date.getDate() + 6);
+		rowHeader.addEventListener('click', () => {
+			updateCalendar(monday, sunday);
+			setContext('calendar');
+		});
 		rowHeader.innerText = formatAsClock(d.weeks[k]);
 	}
 }
@@ -189,6 +212,27 @@ function generateTree(d) {
 	return tree;
 }
 
+async function updateCalendar(newFrom, newTo) {
+	const fromInput = document.querySelector('#calendar input#from');
+	if (newFrom) {
+		fromInput.value = newFrom;
+	}
+
+	const toInput = document.querySelector('#calendar input#to');
+	if (newTo) {
+		toInput.value = newTo;
+	}
+
+	const r = await fetch(`activity?tab=calendar&from=${fromInput.value}&to=${toInput.value}`);
+	const d = JSON.parse(await r.text());
+	const list = document.querySelector('#calendar ol');
+	list.innerHTML = '';
+	files = Object.entries(d).sort((a, b) => a[0].split('/').length - b[0].split('/').length);
+	const depth = -1;
+	const tree = generateTree(files);
+	drawTree(tree, list, depth);
+}
+
 function formatAsTime(sec) {
 	sec = Number.parseInt(sec);
 	if (sec < 60) {
@@ -234,6 +278,12 @@ document.querySelector('span#project select').addEventListener('change', e => {
 	setProject(select.value);
 });
 
+for (const e of document.querySelectorAll('#calendar input[type=date]')) {
+	e.addEventListener('change', () => {
+		updateCalendar();
+	});
+}
+
 function sortByTime(d) {
 	return Object.fromEntries(Object.entries(d).sort((a, b) => (b[1] - a[1])));
 }
@@ -256,16 +306,25 @@ function updateView() {
 	hideAllViews();
 	switch (context.tab) {
 		case 'total': {
-			renderHeatMap(context.data.heatmap);
-			document.querySelector('#total').style.display = 'block';
-			break;
+			{
+				renderHeatMap(context.data.heatmap);
+				document.querySelector('#total').style.display = 'block';
+				break;
+			}
 		}
 
 		case 'project': {
-			context.project ||= document.querySelector('select option').value;
+			{
+				context.project ||= document.querySelector('select option').value;
 
-			getProjectStats();
-			document.querySelector('#project').style.display = 'block';
+				getProjectStats();
+				document.querySelector('#project').style.display = 'block';
+				break;
+			}
+		}
+
+		case 'calendar': {
+			document.querySelector('#calendar').style.display = 'block';
 			break;
 		}
 	}
