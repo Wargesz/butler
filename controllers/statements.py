@@ -79,6 +79,16 @@ AND INSTR(edited_file,
 GROUP BY strftime('%Y-%W', start_date);
 """
 
+stmt['GET_SCOPE_DATA'] = """
+SELECT replace(edited_file, :p, ""), SUM(seconds) as seconds
+FROM midnight
+WHERE date(start_date) >= :fd
+AND date(start_date) <= :td
+AND user_id == :i
+AND instr(edited_file, :p)
+GROUP BY 1;
+"""
+
 
 def getUserActivity(username):
     user = getUserFromUsername(username)
@@ -120,6 +130,12 @@ def getProjectWeeklyActivity(username, projectname):
     user = getUserFromUsername(username)
     return eval(stmt['GET_PROJECT_WEEKLY_DATA'],
                 {'i': user.id, 'f': user.project_folder, 'p': projectname})
+
+
+def getScopeData(username, fromDate, toDate):
+    user = getUserFromUsername(username)
+    return eval(stmt['GET_SCOPE_DATA'], {'i': user.id, 'p': user.project_folder,
+                                         'fd': fromDate, 'td': toDate})
 
 
 def getUserFromUsername(username) -> User:
