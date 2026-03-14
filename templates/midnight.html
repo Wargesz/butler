@@ -11,6 +11,7 @@
         <div id="tabs">
             <button onclick="setContext('total')" class="tab btn">Total</button>
             <button onclick="setContext('project')" class="tab btn">Project</button>
+            <button onclick="setContext('calendar')" class="tab btn">Calendar</button>
         </div>
         <span class="content" id="total">
             <div id="projects">
@@ -39,6 +40,19 @@
             <ol id="time">
             </ol>
         </span>
+        <span class="content" id="calendar">
+            <label for="from">From</label>
+            <br>
+            <input id="from" type="date" min="{{firstMidnight}}"
+                                         max="{{lastMidnight}}" />
+            <br>
+            <label for="to">To</label>
+            <br>
+            <input id="to" type="date" min="{{firstMidnight}}"
+                                       max="{{lastMidnight}}" />
+            <ol id="time">
+            </ol>
+        </span>
         <table id="heatmap">
         </table>
     </body>
@@ -46,7 +60,7 @@
         const context = {
             tab: 'total',
             project: '',
-            views: ['total', 'project'],
+            views: ['total', 'project', 'calendar'],
             data: [],
         }
     </script>
