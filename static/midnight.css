@@ -78,7 +78,7 @@ hr {
     border: thin solid white;
 }
 
-#project ol {
+#project ol, #calendar ol {
     li {
         display: flex;
         span {
@@ -112,8 +112,17 @@ table#heatmap {
         border: thin solid peru;
     }
     th {
+        box-sizing: border-box;
         font-weight: unset;
         font-size: x-small;
+    }
+    td:hover {
+        border: thin solid aliceblue;
+        cursor: pointer;
+    }
+    th:hover {
+        cursor: pointer;
+        text-decoration: underline;
     }
 }
 
@@ -125,4 +134,11 @@ select, option {
     color: white;
     margin: 1em;
     display: flex;
+}
+
+input {
+    border: thin solid var(--primary-green);
+    border-radius: 0.5em;
+    padding: 0.5em;
+    background-color: var(--primary-bg);
 }
