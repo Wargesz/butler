@@ -3,7 +3,7 @@ from models.models import Midnight, User
 from controllers.statements import (getUserActivity, getProjectActivity,
                                     getHeatMap, getUserHeatMap, getEditorData,
                                     getUserWeeklyActivity,
-                                    getProjectWeeklyActivity)
+                                    getProjectWeeklyActivity, getScopeData)
 from middleware.auth import auth
 
 midnight_bp = Blueprint('midnight', __name__)
@@ -14,7 +14,16 @@ REQUIRED_FIELDS = ['editor', 'seconds', 'start', 'end', 'api-key', 'file']
 @midnight_bp.route('/')
 @auth
 def midnight():
-    return render_template('midnight.html')
+    user = User.query.filter(User.username == session.get('user')).first()
+    firstMidnight = Midnight.query.filter(Midnight.user_id ==
+                                          user.id).order_by(Midnight.start_date
+                                                            .asc()).first()
+    lastMidnight = Midnight.query.filter(Midnight.user_id ==
+                                         user.id).order_by(Midnight.start_date
+                                                           .desc()).first()
+    return render_template('midnight.html',
+                           firstMidnight=firstMidnight.start_date.date(),
+                           lastMidnight=lastMidnight.end_date.date())
 
 
 @midnight_bp.route('/mno', methods=['POST'])
@@ -38,6 +47,10 @@ def activity():
     project = request.args.get('project')
     if tab == 'project' and project:
         return getProjectValues(user, project)
+    fromDate = request.args.get('from')
+    toDate = request.args.get('to')
+    if tab == 'calendar' and fromDate and toDate:
+        return getCalendarValues(user, fromDate, toDate)
     return 'invalid tab', 400
 
 
@@ -74,6 +87,14 @@ def getProjectValues(user, project):
     results = getProjectActivity(user, project)
     for res in results:
         d['time'][res[0]] = res[1]
+    return d
+
+
+def getCalendarValues(user, fromDate, toDate):
+    d = {}
+    results = getScopeData(user, fromDate, toDate)
+    for res in results:
+        d[res[0]] = res[1]
     return d
 
 
