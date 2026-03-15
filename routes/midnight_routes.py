@@ -5,6 +5,7 @@ from controllers.statements import (getUserActivity, getProjectActivity,
                                     getUserWeeklyActivity,
                                     getProjectWeeklyActivity, getScopeData)
 from middleware.auth import auth
+from datetime import datetime, timedelta
 
 midnight_bp = Blueprint('midnight', __name__)
 
@@ -21,9 +22,12 @@ def midnight():
     lastMidnight = Midnight.query.filter(Midnight.user_id ==
                                          user.id).order_by(Midnight.start_date
                                                            .desc()).first()
+    defaultFrom = (datetime.today() - timedelta(days=6)).strftime('%Y-%m-%d')
+    defaultTo = datetime.today().strftime('%Y-%m-%d')
     return render_template('midnight.html',
                            firstMidnight=firstMidnight.start_date.date(),
-                           lastMidnight=lastMidnight.end_date.date())
+                           lastMidnight=lastMidnight.end_date.date(),
+                           defaultFrom=defaultFrom, defaultTo=defaultTo)
 
 
 @midnight_bp.route('/mno', methods=['POST'])
