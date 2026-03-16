@@ -90,6 +90,39 @@ GROUP BY 1;
 """
 
 
+stmt['GET_BEST_MONTH'] = """
+SELECT strftime("%Y-%m", start_date) as date, sum(seconds) as seconds
+FROM midnight
+WHERE user_id == :i
+AND instr(edited_file, :p)
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 1;
+"""
+
+
+stmt['GET_BEST_WEEK'] = """
+SELECT strftime("%Y-%m-%d", start_date) as date, sum(seconds) as seconds
+FROM midnight
+WHERE user_id == :i
+AND instr(edited_file, :p)
+GROUP BY strftime("%Y-%W", start_date)
+ORDER BY 2 DESC
+LIMIT 1;
+"""
+
+
+stmt['GET_BEST_DAY'] = """
+SELECT strftime("%Y-%m-%d", start_date) as date, sum(seconds) as seconds
+FROM midnight
+WHERE user_id == :i
+AND instr(edited_file, :p)
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 1
+"""
+
+
 def getUserActivity(username):
     user = getUserFromUsername(username)
     return eval(stmt['GET_USER_ACTIVITY'], {'p': user.project_folder,
@@ -136,6 +169,21 @@ def getScopeData(username, fromDate, toDate):
     user = getUserFromUsername(username)
     return eval(stmt['GET_SCOPE_DATA'], {'i': user.id, 'p': user.project_folder,
                                          'fd': fromDate, 'td': toDate})
+
+
+def getBestMonth(username):
+    user = getUserFromUsername(username)
+    return eval(stmt['GET_BEST_MONTH'], {'i': user.id, 'p': user.project_folder})
+
+
+def getBestDay(username):
+    user = getUserFromUsername(username)
+    return eval(stmt['GET_BEST_DAY'], {'i': user.id, 'p': user.project_folder})
+
+
+def getBestWeek(username):
+    user = getUserFromUsername(username)
+    return eval(stmt['GET_BEST_WEEK'], {'i': user.id, 'p': user.project_folder})
 
 
 def getUserFromUsername(username) -> User:
