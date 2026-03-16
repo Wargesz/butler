@@ -3,7 +3,8 @@ from models.models import Midnight, User
 from controllers.statements import (getUserActivity, getProjectActivity,
                                     getHeatMap, getUserHeatMap, getEditorData,
                                     getUserWeeklyActivity,
-                                    getProjectWeeklyActivity, getScopeData)
+                                    getProjectWeeklyActivity, getScopeData,
+                                    getBestMonth, getBestWeek, getBestDay)
 from middleware.auth import auth
 from datetime import datetime, timedelta
 
@@ -63,6 +64,7 @@ def getTotalValues(user):
     d['heatmap'] = {'days': {}, 'weeks': {}}
     d['time'] = {}
     d['editor'] = {}
+    d['stats'] = {'month': {}, 'week': {}, 'day': {}}
     results = getUserActivity(user)
     for res in results:
         d['time'][res[0]] = res[1]
@@ -75,6 +77,15 @@ def getTotalValues(user):
     results = getEditorData(user)
     for res in results:
         d['editor'][res[0]] = res[1]
+    results = getBestMonth(user)
+    for res in results:
+        d['stats']['month'] = f'{res[0]}|{res[1]}'
+    results = getBestWeek(user)
+    for res in results:
+        d['stats']['week'] = f'{res[0]}|{res[1]}'
+    results = getBestDay(user)
+    for res in results:
+        d['stats']['day'] = f'{res[0]}|{res[1]}'
     return d
 
 
