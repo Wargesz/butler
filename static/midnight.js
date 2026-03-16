@@ -19,6 +19,7 @@ async function getStats() {
 	renderHeatMap(d.heatmap);
 	loadProjectSelector(d.time);
 	addPathListeners();
+	loadStats();
 }
 
 function loadTotalProjectData(d) {
@@ -54,6 +55,32 @@ function drawChartTimeData(d, chartTarget, infoTarget, redirect, limit) {
 
 		list.append(li);
 	}
+}
+
+function loadStats() {
+	const month = context.data.stats.month.split('|');
+	const d = new Date(month[0]);
+	document.querySelector('#total #stats #month').innerText = `${d.toLocaleString('default', {month: 'long', year: 'numeric'})}:\n${formatAsTime(month[1])}`;
+	document.querySelector('#total #stats #month').addEventListener('click', () => {
+		const end = new Date(month[0].split('-')[0], month[0].split('-')[1], 1);
+		console.log(month, `${month[0]}-1`, end.toISOString().split('T')[0]);
+		updateCalendar(`${month[0]}-01`, end.toISOString().split('T')[0]);
+		setContext('calendar');
+	});
+	const week = context.data.stats.week.split('|');
+	const monday = document.querySelector(`td.date-${week[0]}`).parentElement.querySelector('td:first-of-type').className.split(' ')[0].split('date-')[1];
+	const sunday = document.querySelector(`td.date-${week[0]}`).parentElement.querySelector('td:last-of-type').className.split(' ')[0].split('date-')[1];
+	document.querySelector('#total #stats #week').innerText = `${monday}-${sunday.split('-')[2]}:\n ${formatAsTime(week[1])}`;
+	document.querySelector('#total #stats #week').addEventListener('click', () => {
+		updateCalendar(monday, sunday);
+		setContext('calendar');
+	});
+	const day = context.data.stats.day.split('|');
+	document.querySelector('#total #stats #day').innerText = `${day[0]}:\n${formatAsTime(day[1])}`;
+	document.querySelector('#total #stats #day').addEventListener('click', () => {
+		updateCalendar(day[0], day[0]);
+		setContext('calendar');
+	});
 }
 
 function loadProjectSelector(d) {
@@ -133,7 +160,7 @@ function renderHeatMap(d) {
 			c.push(botC[i] + (topC[i] - botC[i]) * value);
 		}
 
-		cell.classList.add(`files-${d[k]}`);
+		cell.classList.add(`files-${d.days[k]}`);
 		cell.style.backgroundColor = `rgb(${c.join(',')})`;
 	}
 
@@ -186,7 +213,7 @@ function drawTree(tree, parentElement, depth) {
 			li.innerText = '📁 ' + k + '/';
 		}
 
-		li.style.marginLeft = depth + 'em';
+		li.style.marginLeft = `${depth}em`;
 		parentElement.append(li);
 		if (tree[k].time) {
 			continue;
@@ -236,12 +263,12 @@ async function updateCalendar(newFrom, newTo) {
 function formatAsTime(sec) {
 	sec = Number.parseInt(sec);
 	if (sec < 60) {
-		return sec + ' seconds';
+		return sec + ' second' + (sec > 1 ? 's' : '');
 	}
 
 	return Math.floor(sec / 3600) > 0
-		? `${Math.floor(sec / 3600)} hours`
-		: `${Math.floor(sec / 60)} minutes`;
+		? `${Math.floor(sec / 3600)} hour${+Math.floor(sec / 3600) > 1 ? 's' : ''}`
+		: `${Math.floor(sec / 60)} minute${+Math.floor(sec / 60) > 1 ? 's' : ''}`;
 }
 
 function formatAsClock(sec) {
@@ -280,6 +307,14 @@ document.querySelector('span#project select').addEventListener('change', e => {
 
 for (const e of document.querySelectorAll('#calendar input[type=date]')) {
 	e.addEventListener('change', () => {
+		/*
+		Const from = new Date(document.querySelector('#calendar input#from').value);
+		const to = new Date(document.querySelector('#calendar input#to').value);
+        if (from > to || to < from) {
+            [from.value, to.value] = [to.value, from.value];
+            console.log('swap');
+        }
+        */
 		updateCalendar();
 	});
 }
@@ -324,6 +359,7 @@ function updateView() {
 		}
 
 		case 'calendar': {
+			renderHeatMap(context.data.heatmap);
 			document.querySelector('#calendar').style.display = 'block';
 			break;
 		}
