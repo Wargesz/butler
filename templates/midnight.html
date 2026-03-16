@@ -33,6 +33,21 @@
                 <ol id="entries" class="editor">
                 </ol>
             </div>
+            <hr>
+            <div id="stats">
+                <fieldset>
+                    <legend>Best month:</legend>
+                    <p id="month"></p>
+                </fieldset>
+                <fieldset>
+                    <legend>Best week:</legend>
+                    <p id="week"></p>
+                </fieldset>
+                <fieldset>
+                    <legend>Best day:</legend>
+                    <p id="day"></p>
+                </fieldset>
+            </div>
         </span>
         <span class="content" id="project">
             <select id="project-view-select">
@@ -44,7 +59,7 @@
             <label for="from">From</label>
             <br>
             <input id="from" type="date" min="{{firstMidnight}}"
-                                         max="{{lastMidnight}}" 
+                                         max="{{lastMidnight}}"
                                          value="{{defaultFrom}}"/>
             <br>
             <label for="to">To</label>
