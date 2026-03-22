@@ -20,6 +20,18 @@ body {
     overflow-x: hidden;
 }
 
+a#home {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0.5em;
+    width: auto;
+    height: auto;
+    text-align: center;
+    font-size: 1.4em;
+    color: unset;
+}
+
 aside {
     position: absolute;
     top: 50%;
